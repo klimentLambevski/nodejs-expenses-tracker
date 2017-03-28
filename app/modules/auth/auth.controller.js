@@ -1,8 +1,9 @@
 const jwt = require("jwt-simple");
 const authConfig = require('../../config/auth');
 const Joi = require('joi');
+const {User} = require('../../models');
 
-const schema = Joi.object().keys({
+const loginValidation = Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string().required()
 });
@@ -10,15 +11,13 @@ const schema = Joi.object().keys({
 
 const methods = {
     login(req, res) {
-        const {error, value} = Joi.validate(req.body, schema);
-        if (req.body.email && req.body.password) {
-            const email = req.body.email;
-            const password = req.body.password;
+        const email = req.body.email;
+        const password = req.body.password;
 
-            let user = {
-                id: 1
-            };
-            if (user) {
+        User.findOne({where: {
+            email: email
+        }}).then((user) => {
+            if(user &&  user.authenticate(password)) {
                 let payload = {
                     id: user.id
                 };
@@ -29,13 +28,14 @@ const methods = {
             } else {
                 res.sendStatus(401);
             }
-        } else {
-            res.sendStatus(401);
-        }
+        });
     }
 };
 
 
 module.exports = {
-    methods
+    methods,
+    validation: {
+        login: loginValidation
+    }
 };

@@ -1,7 +1,8 @@
 const Sequelize = require('sequelize');
+const {pg} = require('../config/database');
 
-const sequelize = new Sequelize('database', 'username', 'password', {
-    host: 'localhost',
+const sequelize = new Sequelize(pg.database, pg.username, pg.password, {
+    host: pg.host,
     dialect: 'postgres'
 });
 
