@@ -1,0 +1,39 @@
+$positions: "left", "right", "top", "bottom";
+$spaces: 0, 1, 5, 10, 15, 30, 50, 70, 100, 130, 160, 200;
+
+@each $space in $spaces {
+
+  @each $position in $positions {
+    .m-pad-#{$position}-#{$space} {
+      padding-#{$position}: #{$space}px !important;
+    }
+    .m-mar-#{$position}-#{$space} {
+      margin-#{$position}: #{$space}px !important;
+    }
+  }
+
+  // general, vertical and horizontal
+  .m-pad-#{$space} {
+    padding: #{$space}px !important;
+  }
+  .m-pad-hor-#{$space} {
+    padding-left: #{$space}px !important;
+    padding-right: #{$space}px !important;
+  }
+  .m-pad-ver-#{$space} {
+    padding-top: #{$space}px !important;
+    padding-bottom: #{$space}px !important;
+  }
+  .m-mar-#{$space} {
+    margin: #{$space}px !important;
+  }
+  .m-mar-hor-#{$space} {
+    margin-left: #{$space}px !important;
+    margin-right: #{$space}px !important;
+  }
+  .m-mar-ver-#{$space} {
+    margin-top: #{$space}px !important;
+    margin-bottom: #{$space}px !important;
+  }
+
+}
