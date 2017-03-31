@@ -6,7 +6,7 @@ const authReducer = (state = {}, action) => {
     case actions.AUTH_SUCCESS:
       return {
         isAuthenticated: true,
-        user: action.loggedInUser
+        user: action.token
       };
 
     case actions.AUTH_ERROR:

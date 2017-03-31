@@ -1,4 +1,4 @@
-import {push} from "react-router-redux";
+import {push, go} from "react-router-redux";
 // import { signIn, checkAuthenticated, logout } from "../../services/api/auth";
 import LocalStorageService from "../../services/storage/local.storage.service";
 import {createActionMap} from "../action";
@@ -14,9 +14,9 @@ export const actions = createActionMap({
 }, 'auth');
 
 //action creators
-const authSuccess = (loggedInUser) => ({
+const authSuccess = (token) => ({
     type: actions.AUTH_SUCCESS,
-    loggedInUser
+    token
 });
 
 const notAuthenticated = () => ({
@@ -33,8 +33,8 @@ export const authenticateUser = (user, redirectUrl) =>
         .then((data) => {
             LocalStorageService.setItem('AUTH_TOKEN', data.token);
             axios.defaults.headers.common['Authorization'] = `JWT ${data.token}`;
-            dispatch(authSuccess(data.user));
-            dispatch(push(redirectUrl));
+            dispatch(authSuccess(data.token));
+            dispatch(push('/dashboard'));
         })
         .catch(error => {
             dispatch(showAlert(error));
@@ -43,18 +43,15 @@ export const authenticateUser = (user, redirectUrl) =>
 export const isAuthenticated = () =>
     (dispatch) => {
         const token = LocalStorageService.getItem('AUTH_TOKEN');
+        console.log(token);
         if (!token) {
             dispatch(notAuthenticated());
+            return false;
+        } else {
+            axios.defaults.headers.common['Authorization'] = `JWT ${token}`;
+            dispatch(authSuccess(token));
+            return true;
         }
-
-        return checkAuthenticated()
-            .then((data) => {
-                LocalStorageService.setItem('AUTH_TOKEN', data.token);
-                dispatch(authSuccess(data.user));
-            })
-            .catch(() => {
-                dispatch(notAuthenticated());
-            });
     };
 
 export const logoutUser = () =>
