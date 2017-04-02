@@ -13,13 +13,16 @@ export class Timeline extends React.Component {
     constructor(props) {
         super(props);
 
-        this.hours = (new Array(24)).fill().map((e, i) => i);
-        this.timelineRecords = this.mapRecordsToTimeline([
-            {
-                workedFrom: new Date(),
-                workedTo: (new Date()).addHours(2).addMinutes(50)
-            }
-        ]);
+        // this.hours = (new Array(24)).fill().map((e, i) => i);
+        this.state = {
+            // timelineRecords: this.mapRecordsToTimeline([
+            //     {
+            //         workedFrom: new Date(),
+            //         workedTo: (new Date()).addHours(2).addMinutes(50)
+            //     }
+            // ]),
+            hours: (new Array(24)).fill().map((e, i) => i)
+        };
 
         this.firstElement = null;
     }
@@ -28,7 +31,17 @@ export class Timeline extends React.Component {
         this.firstElement.scrollIntoView({
             behavior: "smooth",
             block: "start"
-        })
+        });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState((prevState) => {
+            console.log( this.mapRecordsToTimeline(nextProps.records));
+            return {
+                timelineRecords: this.mapRecordsToTimeline(nextProps.records),
+                // hours: (new Array(23)).fill().map((e, i) => i)
+            }
+        });
     }
 
     mapRecordsToTimeline(records) {
@@ -43,8 +56,8 @@ export class Timeline extends React.Component {
             }
 
             acc[workedFromHour].push({
-                workedFrom: record.workedFrom,
-                workedTo: record.workedTo,
+                workedFrom: new Date(record.workedFrom),
+                workedTo: new Date(record.workedTo),
                 from: (workedFromMinutes / 60) * 100,
                 to: (workedToHour - workedFromHour) * 100 + ((workedToMinutes - workedFromMinutes) / 60) * 100
             });
@@ -58,7 +71,7 @@ export class Timeline extends React.Component {
                 <div className="timeline-container">
                     <div className="timeline">
                     {
-                        this.hours.map((hour) => {
+                        this.state.hours.map((hour) => {
                             return (
                                 <div
                                     key={hour}
@@ -70,8 +83,9 @@ export class Timeline extends React.Component {
                                     </div>
                                     <div className="timeline-slot" >
                                         {
-                                            this.timelineRecords[hour] &&
-                                            this.timelineRecords[hour].map((rec, index) => {
+                                            this.state.timelineRecords &&
+                                            this.state.timelineRecords[hour] &&
+                                            this.state.timelineRecords[hour].map((rec, index) => {
                                                 return (
                                                     <div key={index} className="timeline-record"
                                                          style={{height: `${rec.to}%`, top: `${rec.from}%`}}>

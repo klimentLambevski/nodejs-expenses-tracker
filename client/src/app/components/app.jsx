@@ -3,6 +3,7 @@ import {bindActionCreators} from 'redux';
 import {isAuthenticated} from "../store/auth/auth.actions";
 import {CircularProgress} from "material-ui";
 import {getSelfAction} from "../store/self/self.actions";
+import AlertContainer from '../components/alert/alert.container';
 
 class App extends React.Component {
 
@@ -41,6 +42,7 @@ class App extends React.Component {
         return (
             <section className="app">
                 {this.props.children}
+                <AlertContainer />
             </section>
         );
     }

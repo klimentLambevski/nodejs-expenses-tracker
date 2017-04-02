@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import * as axios from 'axios';
 
 const baseUrl = '/api';
@@ -7,7 +6,11 @@ export const resources = {
     AUTH: {
         LOGIN: '/auth/login'
     },
-    SELF: '/self'
+    SELF: {
+        GET: '/self',
+        RECORDS: '/self/records'
+    },
+    USERS: '/users'
 };
 
 export const post = (resource, data) => {

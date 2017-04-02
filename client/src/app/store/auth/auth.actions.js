@@ -46,10 +46,12 @@ export const isAuthenticated = () =>
         console.log(token);
         if (!token) {
             dispatch(notAuthenticated());
+            dispatch(push('/login'));
             return false;
         } else {
             axios.defaults.headers.common['Authorization'] = `JWT ${token}`;
             dispatch(authSuccess(token));
+            dispatch(push('/dashboard'));
             return true;
         }
     };

@@ -6,7 +6,6 @@ const selfReducer = (state = {}, action) => {
         case actions.GET_SELF:
             return action.self;
 
-
         default:
             return state;
     }
