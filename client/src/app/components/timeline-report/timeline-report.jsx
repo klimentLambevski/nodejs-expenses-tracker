@@ -27,9 +27,23 @@ class TimelineReport extends React.Component {
         this.props.getUsersAction(['regular']);
     }
 
-    updateTimeline(date) {
-        this.dateChosen = date;
-        this.props.getUserRecordsAction(this.state.selectedUser, date);
+    updateTimeline(dateFrom, dateTo) {
+
+        let date = _.clone(dateFrom);
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        this.dateChosenFrom = _.clone(date);
+
+        date = _.clone(dateTo);
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        this.dateChosenTo = _.clone(date);
+
+        this.props.getUserRecordsAction(this.state.selectedUser, this.dateChosenFrom, this.dateChosenTo);
     }
 
 
@@ -89,7 +103,7 @@ class TimelineReport extends React.Component {
                         mode="landscape"
                         defaultDate={this.dateChosenFrom}
                         onChange={(e, date) => {
-                            this.updateTimeline(date)
+                            this.updateTimeline(date, this.dateChosenTo)
                         } }/>
 
                     <DatePicker
@@ -97,7 +111,7 @@ class TimelineReport extends React.Component {
                         mode="landscape"
                         defaultDate={this.dateChosenTo}
                         onChange={(e, date) => {
-                            this.updateTimeline(date)
+                            this.updateTimeline(this.dateChosenFrom, date)
                         } }/>
 
                 </div>
