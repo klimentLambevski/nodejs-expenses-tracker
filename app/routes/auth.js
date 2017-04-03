@@ -6,7 +6,7 @@ const {usersMethods, usersValidation} = require('../modules/user/user.controller
 const Auth = Router();
 
 Auth.post('/login', validate(validation.login), login);
-Auth.post('/register', validate(usersValidation.store), usersMethods.store);
+Auth.post('/register', validate(usersValidation.store), usersMethods.register);
 
 module.exports = {
     Auth

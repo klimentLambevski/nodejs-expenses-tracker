@@ -2,28 +2,49 @@ import {getSelfAction} from "../store/self/self.actions";
 import {connect} from "react-redux";
 import {UserTimeline} from "../components/user-timeline/user-timeline";
 import {UsersManage} from "../components/users-manage/users-manage";
+import {AdminView} from "./admin";
+import {Header} from "../components/header/header";
+import {push} from 'react-router-redux';
+
 class DashboardView extends React.Component {
     constructor(props){
         super(props);
-        this.props.dispatch(getSelfAction());
+        this.props.getSelfAction();
     }
 
     componentDidMount() {
 
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.self && nextProps.self.role === 'admin') {
+            if(nextProps.location.pathname === '/dashboard') {
+                this.props.push('/dashboard/users');
+            }
+
+        }
+    }
+
     render() {
         if(this.props.self.role === 'regular') {
             return (
-                <UserTimeline/>
+                <section>
+                    <Header />
+                    <UserTimeline/>
+                </section>
             )
         } else if(this.props.self.role === 'manager') {
             return (
-                <UsersManage/>
+                <section>
+                    <Header />
+                    <UsersManage/>
+                </section>
             )
         } else {
             return (
-                <div>Admin view</div>
+                <AdminView>
+                    {this.props.children}
+                </AdminView>
             )
         }
     }
@@ -33,7 +54,10 @@ const mapStateToProps = (state) => ({
     self: state.common.self
 });
 
-DashboardView = connect(mapStateToProps)(DashboardView);
+DashboardView = connect(mapStateToProps, {
+    push,
+    getSelfAction
+})(DashboardView);
 
 export {
     DashboardView

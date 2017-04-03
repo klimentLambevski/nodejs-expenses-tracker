@@ -13,14 +13,7 @@ export class Timeline extends React.Component {
     constructor(props) {
         super(props);
 
-        // this.hours = (new Array(24)).fill().map((e, i) => i);
         this.state = {
-            // timelineRecords: this.mapRecordsToTimeline([
-            //     {
-            //         workedFrom: new Date(),
-            //         workedTo: (new Date()).addHours(2).addMinutes(50)
-            //     }
-            // ]),
             hours: (new Array(24)).fill().map((e, i) => i)
         };
 
@@ -39,7 +32,6 @@ export class Timeline extends React.Component {
             console.log( this.mapRecordsToTimeline(nextProps.records));
             return {
                 timelineRecords: this.mapRecordsToTimeline(nextProps.records),
-                // hours: (new Array(23)).fill().map((e, i) => i)
             }
         });
     }
@@ -59,10 +51,16 @@ export class Timeline extends React.Component {
                 workedFrom: new Date(record.workedFrom),
                 workedTo: new Date(record.workedTo),
                 from: (workedFromMinutes / 60) * 100,
-                to: (workedToHour - workedFromHour) * 100 + ((workedToMinutes - workedFromMinutes) / 60) * 100
+                to: (workedToHour - workedFromHour) * 100 + ((workedToMinutes - workedFromMinutes) / 60) * 100,
+                id: record.id,
+                notes: record.notes
             });
             return acc;
         }, {})
+    }
+
+    deleteRecord(record) {
+        this.props.deleteRecord(record);
     }
 
     render() {
@@ -87,13 +85,24 @@ export class Timeline extends React.Component {
                                             this.state.timelineRecords[hour] &&
                                             this.state.timelineRecords[hour].map((rec, index) => {
                                                 return (
-                                                    <div key={index} className="timeline-record"
+                                                    <div
+                                                        key={index}
+                                                        className={
+                                                            this.props.workingHours.from <= rec.workedFrom.getHours() &&  this.props.workingHours.to >= rec.workedTo.getHours() ?
+                                                                'timeline-record working-time': 'timeline-record'
+                                                        }
                                                          style={{height: `${rec.to}%`, top: `${rec.from}%`}}>
                                                         <div className="timeline-record-from">
                                                             From {rec.workedFrom.getHours()}:{rec.workedFrom.getMinutes()}
                                                         </div>
+                                                        <div className="timeline-record-notes">
+                                                            {rec.notes}
+                                                        </div>
                                                         <div className="timeline-record-to">
                                                             To {rec.workedTo.getHours()}:{rec.workedTo.getMinutes()}
+                                                        </div>
+                                                        <div className="delete-record" onClick={_ => {this.deleteRecord(rec)}}>
+                                                            X
                                                         </div>
                                                     </div>
                                                 )

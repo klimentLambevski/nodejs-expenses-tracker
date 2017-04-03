@@ -3,7 +3,7 @@ import {push, go} from "react-router-redux";
 import LocalStorageService from "../../services/storage/local.storage.service";
 import {createActionMap} from "../action";
 import {showAlert} from '../alert/alert.actions';
-import {signIn} from "../../services/api/auth";
+import {register, signIn} from "../../services/api/auth";
 import * as axios from 'axios';
 
 export const actions = createActionMap({
@@ -37,7 +37,24 @@ export const authenticateUser = (user, redirectUrl) =>
             dispatch(push('/dashboard'));
         })
         .catch(error => {
-            dispatch(showAlert(error));
+            error.data.map((err) => {
+                dispatch(showAlert(err))
+            });
+        });
+
+export const registerUserAction = (user) =>
+    (dispatch) => register(user)
+        .then((data) => signIn(user))
+        .then(data => {
+            LocalStorageService.setItem('AUTH_TOKEN', data.token);
+            axios.defaults.headers.common['Authorization'] = `JWT ${data.token}`;
+            dispatch(authSuccess(data.token));
+            dispatch(push('/dashboard'));
+        })
+        .catch(error => {
+            error.data.map((err) => {
+                dispatch(showAlert(err))
+            });
         });
 
 export const isAuthenticated = () =>
@@ -57,12 +74,9 @@ export const isAuthenticated = () =>
     };
 
 export const logoutUser = () =>
-    (dispatch) => logout()
-        .then(() => {
+    (dispatch) => {
             LocalStorageService.removeItem('AUTH_TOKEN');
             dispatch(logoutSuccess());
-            dispatch(push('/'));
-        })
-        .catch(error => {
-            throw error;
-        });
+            dispatch(push('/login'));
+        };
+

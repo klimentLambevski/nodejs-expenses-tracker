@@ -14,6 +14,10 @@ const Record = sequelize.define('record', {
     workedTo: {
         type: DataTypes.DATE,
         allowNull: false
+    },
+    notes: {
+        type: DataTypes.TEXT,
+        allowNull: true
     }
 });
 

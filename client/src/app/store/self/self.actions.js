@@ -1,10 +1,12 @@
 import {createActionMap} from '../action';
-import {getSelf} from "../../services/api/self";
+import {getSelf, updateSelf} from "../../services/api/self";
 import {push} from 'react-router-redux';
+import {showAlert} from "../alert/alert.actions";
 
 
 export const actions = createActionMap({
     GET_SELF: '',
+    LOGOUT_SELF: '',
 }, 'self');
 
 const getSelfSuccess = (self) => ({
@@ -12,6 +14,9 @@ const getSelfSuccess = (self) => ({
     self
 });
 
+const loguotSuccess = () => ({
+    type: actions.LOGOUT_SELF
+});
 
 export const getSelfAction = () =>
     (dispatch) => getSelf()
@@ -19,5 +24,26 @@ export const getSelfAction = () =>
             response => dispatch(getSelfSuccess(response))
         )
         .catch(
-            error => dispatch(push('/login'))
+            error => {
+                error.data.map((err) => {
+                    dispatch(showAlert(err))
+                });
+            }
         );
+
+
+export const saveSelfAction = (data) =>
+    (dispatch) => updateSelf(data)
+        .then(
+            response => dispatch(getSelfSuccess(response))
+        )
+        .catch(
+            error => {
+                error.data.map((err) => {
+                    dispatch(showAlert(err))
+                });
+            }
+        );
+
+export const logoutSelf = () =>
+    (dispatch) => dispatch(loguotSuccess());

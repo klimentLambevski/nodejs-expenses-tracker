@@ -20,7 +20,7 @@ const withFormHandler = (WrappedForm, formName) => {
         }
 
         componentWillReceiveProps(nextProps) {
-            if (this.state.formItem.id !== nextProps.formItem.id) {
+            if (nextProps.formItem && this.state.formItem.id !== nextProps.formItem.id) {
                 this.setState({formItem: nextProps.formItem})
             }
         }

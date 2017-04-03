@@ -1,83 +1,108 @@
-import { Field } from 'redux-form';
+import {Field} from 'redux-form';
 import RaisedButton from 'material-ui/RaisedButton';
-import { renderTextField } from '../inputs/inputs';
+import {renderSelectField, renderTextField} from '../inputs/inputs';
+import {MenuItem} from "material-ui";
 
-const UserRegisterForm =({ handleSubmit, pristine, submitting, invalid, initialValues }) => (
-    <form onSubmit={handleSubmit} noValidate autoComplete="off">
-        <div>
-            <Field
-                component={renderTextField}
-                type="text"
-                name="name"
-                label="Name"
-            />
-        </div>
-
-        <div>
-            <Field
-                component={renderTextField}
-                type="text"
-                name="lastName"
-                label="Last name"
-            />
-        </div>
-
-        <div>
-            <Field
-                component={renderTextField}
-                type="number"
-                name="workingHoursFrom"
-                label="Working hours from"
-            />
-        </div>
-
-        <div>
-            <Field
-                component={renderTextField}
-                type="number"
-                name="workingHoursTo"
-                label="Working hours to"
-            />
-        </div>
-
-        <div>
-            <Field
-                component={renderTextField}
-                type="text"
-                name="email"
-                label="Email"
-            />
-        </div>
-
-        {
-            !initialValues.id? (
+const UserRegisterForm = ({handleSubmit, pristine, submitting, invalid, initialValues, role}) => {
+    const roles = role !== 'admin' ? ['regular', 'manager'] : ['regular', 'manager', 'admin'];
+    return (
+        <form onSubmit={handleSubmit} noValidate autoComplete="off">
             <div>
                 <Field
                     component={renderTextField}
-                    type="password"
-                    name="password"
-                    label="Password"
-                />
-
-                <Field
-                    component={renderTextField}
-                type="password"
-                name="password_repeat"
-                label="Repeat password"
+                    type="text"
+                    name="name"
+                    label="Name"
                 />
             </div>
-            ): null
-        }
 
-        <div>
-            <RaisedButton
-                type="submit"
-                label="Save"
-                primary={true}
-                disabled={pristine || submitting || invalid}
-            />
-        </div>
-    </form>
-);
+            <div>
+                <Field
+                    component={renderTextField}
+                    type="text"
+                    name="lastName"
+                    label="Last name"
+                />
+            </div>
+
+            <div>
+                <Field
+                    component={renderTextField}
+                    type="number"
+                    name="workingHoursFrom"
+                    label="Working hours from"
+                />
+            </div>
+
+            <div>
+                <Field
+                    component={renderTextField}
+                    type="number"
+                    name="workingHoursTo"
+                    label="Working hours to"
+                />
+            </div>
+            {
+                (role && role !== 'regular') && (
+                    <div>
+                        <Field
+                            component={renderSelectField}
+                            label="Role"
+                            name="role"
+                        >
+                            {
+                                roles.map(role =>
+                                    <MenuItem
+                                        key={role}
+                                        value={role}
+                                        primaryText={role}
+                                    />
+                                )
+                            }
+                        </Field>
+                    </div>
+                )
+            }
+
+            <div>
+                <Field
+                    component={renderTextField}
+                    disabled={!!initialValues.id}
+                    type="text"
+                    name="email"
+                    label="Email"
+                />
+            </div>
+            {
+                !initialValues.id ? (
+                    <div>
+                        <Field
+                            component={renderTextField}
+                            type="password"
+                            name="password"
+                            label="Password"
+                        />
+
+                        <Field
+                            component={renderTextField}
+                            type="password"
+                            name="password_repeat"
+                            label="Repeat password"
+                        />
+                    </div>
+                ) : null
+            }
+
+            <div>
+                <RaisedButton
+                    type="submit"
+                    label="Save"
+                    primary={true}
+                    disabled={pristine || submitting || invalid}
+                />
+            </div>
+        </form>
+    )
+};
 
 export default UserRegisterForm

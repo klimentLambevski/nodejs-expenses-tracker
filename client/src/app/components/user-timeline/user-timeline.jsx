@@ -1,7 +1,7 @@
 import {connect} from "react-redux";
 import {Header} from "../header/header";
-import {DatePicker, RaisedButton, TimePicker} from "material-ui";
-import {addSelfRecordAction, getSelfRecordsAction} from "../../store/record/record.actions";
+import {DatePicker, RaisedButton, TextField, TimePicker} from "material-ui";
+import {addSelfRecordAction, deleteSelfRecordAction, getSelfRecordsAction} from "../../store/record/record.actions";
 import {Timeline} from "../timeline/timeline";
 import * as _ from 'lodash';
 import {showAlert} from "../../store/alert/alert.actions";
@@ -11,6 +11,7 @@ class UserTimeline extends React.Component {
         super(props);
         this.fromHour = null;
         this.toHour = null;
+        this.notes = null;
         this.dateChosen = null;
     }
 
@@ -23,12 +24,15 @@ class UserTimeline extends React.Component {
         this.dateChosen = date;
 
         this.props.getSelfRecordsAction(date);
-        this.props.showAlert({message: 'Test alert'})
     }
 
     updateTimeline(date) {
         this.dateChosen = date;
         this.props.getSelfRecordsAction(date);
+    }
+
+    updateNotes(notes) {
+        this.notes = notes;
     }
 
     addRecord() {
@@ -49,49 +53,71 @@ class UserTimeline extends React.Component {
         toHour.setSeconds(0);
         toHour.setMilliseconds(0);
 
-        this.props.addSelfRecordAction(fromHour, toHour);
+        this.props.addSelfRecordAction(fromHour, toHour, this.notes);
+    }
+
+    deleteRecord(record) {
+        this.props.deleteSelfRecordAction(record);
     }
 
     render() {
         return (
-            <section>
-                <Header />
-                <div className="user-timeline-component">
-                    <div className="user-timeline-filters form-container">
-                        <DatePicker
-                            floatingLabelText="Enter desired date"
-                            mode="landscape"
-                            defaultDate={new Date()}
-                            onChange={(e, date) => {this.updateTimeline(date)} }/>
-                        <div className="divider"></div>
-                        <TimePicker
-                            format="24hr"
-                            floatingLabelText="From hour"
-                            onChange={(e, time) => {this.fromHour = time; } }
-                        />
+            <div className="user-timeline-component">
+                <div className="user-timeline-filters form-container">
+                    <DatePicker
+                        floatingLabelText="Enter desired date"
+                        mode="landscape"
+                        defaultDate={new Date()}
+                        onChange={(e, date) => {
+                            this.updateTimeline(date)
+                        } }/>
+                    <div className="divider"></div>
+                    <TimePicker
+                        format="24hr"
+                        floatingLabelText="From hour"
+                        onChange={(e, time) => {
+                            this.fromHour = time;
+                        } }
+                    />
 
-                        <TimePicker
-                            format="24hr"
-                            floatingLabelText="To hour"
-                            onChange={(e, time) => {this.toHour = time; } }
-                        />
+                    <TimePicker
+                        format="24hr"
+                        floatingLabelText="To hour"
+                        onChange={(e, time) => {
+                            this.toHour = time;
+                        } }
+                    />
 
-                        <RaisedButton label="Add record" primary={true} onClick={(e) => {this.addRecord()}} />
-                    </div>
-                    <Timeline records={this.props.records}/>
+                    <TextField
+                        hintText="Notes"
+                        floatingLabelText="Add notes"
+                        multiLine={true}
+                        onChange={(e, value) => {this.updateNotes(value)}}
+                    />
+
+                    <RaisedButton label="Add record" primary={true} onClick={(e) => {
+                        this.addRecord()
+                    }}/>
                 </div>
-            </section>
+                <Timeline
+                    deleteRecord={this.deleteRecord.bind(this)}
+                    records={this.props.records}
+                    workingHours={{from: this.props.self.workingHoursFrom, to: this.props.self.workingHoursTo}}/>
+            </div>
+
         )
     }
 }
 
 const mapStateToProps = (state) => ({
-    records: state.common.records
+    records: state.common.records,
+    self: state.common.self
 });
 
 UserTimeline = connect(mapStateToProps, {
     getSelfRecordsAction,
     addSelfRecordAction,
+    deleteSelfRecordAction,
     showAlert
 })(UserTimeline);
 
