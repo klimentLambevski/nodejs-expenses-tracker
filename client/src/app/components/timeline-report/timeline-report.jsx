@@ -99,7 +99,7 @@ class TimelineReport extends React.Component {
                     </SelectField>
 
                     <DatePicker
-                        floatingLabelText="Enter desired date"
+                        floatingLabelText="Enter date from"
                         mode="landscape"
                         defaultDate={this.dateChosenFrom}
                         onChange={(e, date) => {
@@ -107,7 +107,7 @@ class TimelineReport extends React.Component {
                         } }/>
 
                     <DatePicker
-                        floatingLabelText="Enter desired date"
+                        floatingLabelText="Enter date to"
                         mode="landscape"
                         defaultDate={this.dateChosenTo}
                         onChange={(e, date) => {

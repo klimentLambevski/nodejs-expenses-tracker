@@ -85,7 +85,7 @@ class UserSpecificTimeline extends React.Component {
                     </SelectField>
 
                     <DatePicker
-                        floatingLabelText="Enter desired date"
+                        floatingLabelText="Enter date"
                         mode="landscape"
                         defaultDate={new Date()}
                         onChange={(e, date) => {

@@ -73,13 +73,38 @@ const recordMethods = {
         })
     },
     store(req, res) {
-        Record
-            .build(req.body)
-            .save()
-            .then(record => {
-                req.user.addRecord(record);
-                res.json(record);
-            })
+        req.user.getRecords({
+            where: {
+                $or: [
+                    {
+                        workedFrom: {
+                            $between: [new Date(req.body.workedFrom), new Date(req.body.workedTo)]
+                        }
+                    },{
+                        workedTo: {
+                            $between: [new Date(req.body.workedFrom), new Date(req.body.workedTo)]
+                        }
+                    }
+
+                ]
+
+            }
+        }).then(records => {
+            if(records.length > 0) {
+                res.status(422).json([{message: 'You can\'t add records on already filled spots'}])
+            } else {
+                Record
+                    .build(req.body)
+                    .save()
+                    .then(record => {
+                        req.user.addRecord(record);
+                        res.json(record);
+                    }).catch(() => {
+                    res.sendStatus(422);
+                })
+            }
+        });
+
     },
     update(req, res) {
         Record.findById(req.params.id).then(record => {

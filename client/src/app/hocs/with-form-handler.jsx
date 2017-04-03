@@ -11,7 +11,6 @@ const withFormHandler = (WrappedForm, formName) => {
     class WithFormHandler extends React.Component {
         constructor(props) {
             super(props);
-            console.log(this.props.formItem);
             this.state = {
                 formItem: Object.assign({}, this.props.formItem)
             };
@@ -38,7 +37,7 @@ const withFormHandler = (WrappedForm, formName) => {
             const {saveItem, formItem, removeContainer, ...rest} = this.props;
 
             return (
-                <section className={!removeContainer ? 'form-container' : ''}>
+                <section className={!removeContainer ? 'form-container' : ''} style={{position: 'relative'}}>
                     {
                         this.state.isLoading ?
                             <div className="form-loading">

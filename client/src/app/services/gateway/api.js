@@ -40,8 +40,5 @@ export const get = (resource, params) => {
     return axios.get(`${baseUrl}${resource}`, {
         params: params
     })
-        .then(res => res.data)
-        .catch(error =>{
-            console.log(error)
-        });
+        .then(res => res.data);
 };

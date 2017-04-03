@@ -24,11 +24,7 @@ export const getSelfAction = () =>
             response => dispatch(getSelfSuccess(response))
         )
         .catch(
-            error => {
-                error.data.map((err) => {
-                    dispatch(showAlert(err))
-                });
-            }
+            error => dispatch(push('/login'))
         );
 
 

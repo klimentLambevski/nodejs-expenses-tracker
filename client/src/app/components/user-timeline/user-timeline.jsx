@@ -65,7 +65,7 @@ class UserTimeline extends React.Component {
             <div className="user-timeline-component">
                 <div className="user-timeline-filters form-container">
                     <DatePicker
-                        floatingLabelText="Enter desired date"
+                        floatingLabelText="Enter date"
                         mode="landscape"
                         defaultDate={new Date()}
                         onChange={(e, date) => {

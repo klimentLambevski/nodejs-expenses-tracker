@@ -29,11 +29,16 @@ class UsersManage extends React.Component {
     };
 
     openModal = (user) => {
-
         this.setState(() => {
             return {modalOpen: true, currentUser: user};
         });
     };
+
+    componentWillReceiveProps() {
+        this.setState(() => {
+            return {modalOpen: false};
+        });
+    }
 
     render() {
         const actions = [
@@ -47,15 +52,6 @@ class UsersManage extends React.Component {
 
         const UserRegisterFormRedux = withFormHandler(UserRegisterForm, 'create');
 
-        const children = [
-            <UserRegisterFormRedux
-                key="user-register"
-                removeContainer={true}
-                formItem={this.state.currentUser}
-                saveItem={this.props.saveUserAction}
-                role={this.props.self.role}
-            />
-        ];
         return (
             <div className="users-manage-component">
                 <div className="users-actions form-container">
@@ -124,8 +120,15 @@ class UsersManage extends React.Component {
                     actions={actions}
                     modal={false}
                     open={this.state.modalOpen}
-                    children={children}
-                    onRequestClose={this.handleClose}/>
+                    onRequestClose={this.handleClose}>
+                    <UserRegisterFormRedux
+                        key="user-register"
+                        removeContainer={true}
+                        formItem={this.state.currentUser}
+                        saveItem={this.props.saveUserAction}
+                        role={this.props.self.role}
+                    />
+                </Dialog>
             </div>
         )
     }

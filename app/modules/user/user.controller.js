@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const {User} = require('../../models');
 const _ = require('lodash');
+const sequelize = require("sequelize");
 
 
 const usersValidation = {
@@ -55,12 +56,18 @@ const usersMethods = {
         })
     },
     store(req, res) {
-        if (req.user.role !== 'admin' && _.findIndex(['manager', 'regular'], role => role === req.body.role) > -1 || !req.body.role) {
+        if (req.user.role !== 'admin' && _.findIndex(['manager', 'regular'], role => role === req.body.role) === -1 && req.body.role) {
+            res.sendStatus(401);
+        } else {
             User.create(req.body).then((user) => {
                 res.json(user);
+            }, (err) => {
+                if(err.name === 'SequelizeUniqueConstraintError') {
+                    res.status(422).json([{message: 'Entered email already exist'}]);
+                } else {
+                    res.sendStatus(422)
+                }
             })
-        } else {
-            res.sendStatus(401);
         }
 
     },
