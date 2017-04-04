@@ -74,6 +74,12 @@ const usersMethods = {
     register(req, res) {
         User.create(req.body).then((user) => {
             res.json(user);
+        }, (err) => {
+            if(err.name === 'SequelizeUniqueConstraintError') {
+                res.status(422).json([{message: 'Entered email already exist'}]);
+            } else {
+                res.sendStatus(422)
+            }
         })
     },
     update(req, res) {
