@@ -10,6 +10,7 @@ import {
 import {Header} from "../header/header";
 import UserRegisterForm from '../user/user.register.form';
 import {withFormHandler} from "../../hocs/with-form-handler";
+import {ConfirmModal} from "../confirm-modal/confirm-modal";
 
 class UsersManage extends React.Component {
     constructor(props) {
@@ -129,6 +130,7 @@ class UsersManage extends React.Component {
                         role={this.props.self.role}
                     />
                 </Dialog>
+                <ConfirmModal modalOpen={}/>
             </div>
         )
     }
