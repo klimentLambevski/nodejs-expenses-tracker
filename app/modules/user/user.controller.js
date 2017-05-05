@@ -30,7 +30,12 @@ const usersMethods = {
         let options = {
             order: [
                 ['createdAt', 'DESC']
-            ]
+            ],
+            where: {
+                id: {
+                    $ne: req.user.id
+                }
+            }
         };
 
         if(req.user.role !== 'admin') {
@@ -38,6 +43,9 @@ const usersMethods = {
                 where: {
                     role: {
                         $in: ['regular', 'manager']
+                    },
+                    id: {
+                        $ne: req.user.id
                     }
                 }
             });
@@ -46,6 +54,9 @@ const usersMethods = {
                 where: {
                     role: {
                         $in: req.query.roles
+                    },
+                    id: {
+                        $ne: req.user.id
                     }
                 }
             });
