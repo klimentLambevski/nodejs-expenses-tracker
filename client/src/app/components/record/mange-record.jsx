@@ -1,7 +1,10 @@
 import {Dialog, FlatButton, RaisedButton} from "material-ui";
 import {withFormHandler} from "../../hocs/with-form-handler";
 import {RecordForm} from "./record.form";
-import {addSelfRecordAction, getSelfRecordsAction, updateSelfRecordAction} from "../../store/record/record.actions";
+import {
+    addSelfRecordAction, addUserRecordAction, getSelfRecordsAction,
+    updateSelfRecordAction
+} from "../../store/record/record.actions";
 import {connect} from "react-redux";
 
 const RecordFormRedux = withFormHandler(RecordForm, 'create');
@@ -22,8 +25,16 @@ class ManageRecord extends React.Component {
 
     saveRecord = (record) => {
         if(!record.id) {
+            if(this.props.user) {
+                return this.props.addUserRecordAction(this.props.user, record).then(res => {
+                    this.setState({modalOpen: false});
+                    this.props.onChange && this.props.onChange(record);
+                    return res;
+                });
+            }
             return this.props.addSelfRecordAction(record).then(res => {
                 this.setState({modalOpen: false});
+                this.props.onChange && this.props.onChange(record);
                 return res;
             });
         } else {
@@ -55,10 +66,10 @@ class ManageRecord extends React.Component {
 
         return (
             <div>
-                <RaisedButton label={this.props.record ? 'Edit record' : 'Create record'} primary={true}
+                <RaisedButton label={this.props.record ? 'Edit' : 'Create expense record'} primary={true}
                               onClick={this.openModal}/>
                 <Dialog
-                    title={this.props.record ? 'Update record' : 'Create record'}
+                    title={this.props.record ? 'Update expense record' : 'Create expense record'}
                     actions={actions}
                     modal={false}
                     open={this.state.modalOpen}
@@ -77,7 +88,8 @@ class ManageRecord extends React.Component {
 
 ManageRecord = connect(null, {
     addSelfRecordAction,
-    updateSelfRecordAction
+    updateSelfRecordAction,
+    addUserRecordAction
 })(ManageRecord);
 
 export {

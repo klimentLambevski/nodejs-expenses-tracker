@@ -1,10 +1,11 @@
 import {ManageRecord} from "../record/mange-record";
 import {connect} from "react-redux";
-import {deleteSelfRecordAction, getSelfRecordsAction} from "../../store/record/record.actions";
+import {deleteSelfRecordAction, getSelfRecordsAction, getUserRecordsAction} from "../../store/record/record.actions";
 import {
-    DatePicker, RaisedButton, Table, TableBody, TableHeader, TableHeaderColumn, TableRow,
+    DatePicker, MenuItem, RaisedButton, SelectField, Table, TableBody, TableHeader, TableHeaderColumn, TableRow,
     TableRowColumn
 } from "material-ui";
+import * as _ from "lodash";
 
 class RecordsManage extends React.Component {
     constructor(props) {
@@ -14,14 +15,40 @@ class RecordsManage extends React.Component {
         date.setMinutes(0);
         date.setSeconds(0);
         date.setMilliseconds(0);
-        this.props.getSelfRecordsAction(date);
-        this.state = {
 
+        let dateTo = _.clone(date);
+        dateTo.setDate(date.getDate() + 1);
+
+        this.state = {
+            selectedUser: null,
+            dateFrom: date,
+            dateTo: dateTo
+        };
+
+        if(this.props.self.role !== 'admin') {
+            this.props.getSelfRecordsAction(date, dateTo);
         }
+
+
     }
 
-    updateRecords(date) {
-        this.props.getSelfRecordsAction(date);
+    updateRecords(dateFrom, dateTo) {
+        let dateToModified = _.clone(dateTo);
+        if(dateFrom >= dateTo) {
+            dateToModified = _.clone(dateFrom);
+            dateToModified.setDate(dateFrom.getDate() + 1);
+        }
+
+        if(this.props.self.role !== 'admin') {
+            this.props.getSelfRecordsAction(dateFrom, dateTo);
+        } else {
+            this.props.getUserRecordsAction(this.state.selectedUser, dateFrom, dateToModified);
+        }
+
+        this.setState({
+            dateFrom: dateFrom,
+            dateTo: dateToModified
+        })
     }
 
     formatDate(date) {
@@ -38,77 +65,127 @@ class RecordsManage extends React.Component {
         this.props.deleteSelfRecordAction(record);
     }
 
+    setUser(user) {
+        this.setState({
+            selectedUser: user
+        });
+
+        this.props.getUserRecordsAction(user, this.state.dateFrom, this.state.dateTo);
+    }
+
+    recordAdded = () => {
+        if(this.props.self.role !== 'admin') {
+            this.props.getSelfRecordsAction(this.state.dateFrom, this.state.dateTo);
+        } else {
+            this.props.getUserRecordsAction(this.state.selectedUser, this.state.dateFrom, this.state.dateTo);
+        }
+    };
+
     render() {
 
         return (
             <div className="records-manage">
                 <div className="records-manage-actions form-container">
+                    {
+                        this.props.self.role === 'admin' && (
+                            <SelectField
+                                floatingLabelText="Select user"
+                                value={this.state.selectedUser}
+                                onChange={(event, index, user) => {this.setUser(user)}}
+                            >
+                                {
+                                    this.props.users.map((user, index) => (
+                                        <MenuItem key={index} value={user} primaryText={`${user.name} ${user.lastName}`}/>
+                                    ))
+                                }
+                            </SelectField>
+                        )
+                    }
                     <DatePicker
-                        floatingLabelText="Date"
+                        floatingLabelText="Date from"
                         mode="landscape"
-                        defaultDate={new Date()}
+                        value={this.state.dateFrom}
                         onChange={(e, date) => {
-                            this.updateRecords(date)
+                            this.updateRecords(date, this.state.dateTo)
                         } }/>
-                    <ManageRecord/>
+
+                    <DatePicker
+                        floatingLabelText="Date to"
+                        mode="landscape"
+                        value={this.state.dateTo}
+                        onChange={(e, date) => {
+                            this.updateRecords(this.state.dateFrom, date)
+                        } }/>
+                    {
+                        (this.props.self.role !== 'admin' || this.state.selectedUser) && (
+                            <ManageRecord user={this.state.selectedUser} onChange={this.recordAdded}/>
+                        )
+                    }
                 </div>
-                <div className="records-manage-preview form-container">
-                    <Table
-                        height={'400px'}
-                        fixedHeader={true}
-                        selectable={false}
-                        multiSelectable={false}>
-                        <TableHeader
-                            displaySelectAll={false}
-                            adjustForCheckbox={false}
-                            enableSelectAll={false}
-                        >
-                            <TableRow>
-                                <TableHeaderColumn>#</TableHeaderColumn>
-                                <TableHeaderColumn tooltip="Date of the record">Date</TableHeaderColumn>
-                                <TableHeaderColumn tooltip="Description od the record">Description</TableHeaderColumn>
-                                <TableHeaderColumn tooltip="The Last name">Amount</TableHeaderColumn>
-                                <TableHeaderColumn tooltip="Comment">Comment</TableHeaderColumn>
-                                <TableHeaderColumn tooltip="Edit record">Edit</TableHeaderColumn>
-                                <TableHeaderColumn tooltip="Delete">Delete</TableHeaderColumn>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody
-                            displayRowCheckbox={false}
-                            deselectOnClickaway={true}
-                            showRowHover={false}
-                            stripedRows={false}
-                        >
-                            {this.props.records.map((row, index) => (
-                                <TableRow key={index} selected={row.selected}>
-                                    <TableRowColumn>{index}</TableRowColumn>
-                                    <TableRowColumn>{this.formatDate(row.date)}</TableRowColumn>
-                                    <TableRowColumn>{row.description}</TableRowColumn>
-                                    <TableRowColumn>{row.amount}</TableRowColumn>
-                                    <TableRowColumn>{row.comment}</TableRowColumn>
-                                    <TableRowColumn>
-                                        <ManageRecord record={row}/>
-                                    </TableRowColumn>
-                                    <TableRowColumn>
-                                        <RaisedButton label="Delete" secondary={true} onTouchTap={() => {
-                                            this.deleteRecord(row)
-                                        }}/>
-                                    </TableRowColumn>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </div>
+                {
+                    (this.props.self.role !== 'admin' || this.state.selectedUser) && (
+                        <div className="records-manage-preview form-container">
+                            <Table
+                                height={'400px'}
+                                fixedHeader={true}
+                                selectable={false}
+                                multiSelectable={false}>
+                                <TableHeader
+                                    displaySelectAll={false}
+                                    adjustForCheckbox={false}
+                                    enableSelectAll={false}
+                                >
+                                    <TableRow>
+                                        <TableHeaderColumn>#</TableHeaderColumn>
+                                        <TableHeaderColumn tooltip="Date of the record">Date</TableHeaderColumn>
+                                        <TableHeaderColumn tooltip="Description od the record">Description</TableHeaderColumn>
+                                        <TableHeaderColumn tooltip="The Last name">Amount</TableHeaderColumn>
+                                        <TableHeaderColumn tooltip="Comment">Comment</TableHeaderColumn>
+                                        <TableHeaderColumn tooltip="Edit record">Edit</TableHeaderColumn>
+                                        <TableHeaderColumn tooltip="Delete">Delete</TableHeaderColumn>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody
+                                    displayRowCheckbox={false}
+                                    deselectOnClickaway={true}
+                                    showRowHover={false}
+                                    stripedRows={false}
+                                >
+                                    {this.props.records.map((row, index) => (
+                                        <TableRow key={index} selected={row.selected}>
+                                            <TableRowColumn>{index}</TableRowColumn>
+                                            <TableRowColumn>{this.formatDate(row.date)}</TableRowColumn>
+                                            <TableRowColumn>{row.description}</TableRowColumn>
+                                            <TableRowColumn>{row.amount}</TableRowColumn>
+                                            <TableRowColumn>{row.comment}</TableRowColumn>
+                                            <TableRowColumn>
+                                                <ManageRecord record={row}/>
+                                            </TableRowColumn>
+                                            <TableRowColumn>
+                                                <RaisedButton label="Delete" secondary={true} onTouchTap={() => {
+                                                    this.deleteRecord(row)
+                                                }}/>
+                                            </TableRowColumn>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    )
+                }
             </div>
         )
     }
 }
 
 RecordsManage = connect(state => ({
-    records: state.common.records
+    records: state.common.records,
+    self: state.common.self,
+    users: state.common.users,
 }), {
     getSelfRecordsAction,
-    deleteSelfRecordAction
+    deleteSelfRecordAction,
+    getUserRecordsAction
 })(RecordsManage);
 
 export {

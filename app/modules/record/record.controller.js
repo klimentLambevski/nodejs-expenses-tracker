@@ -39,7 +39,7 @@ const recordMethods = {
             if (user) {
                 user.getRecords({
                     where: {
-                        workedFrom: {
+                        date: {
                             $between: [dateFrom, dateTo]
                         }
                     }
@@ -86,6 +86,21 @@ const recordMethods = {
         })
 
     },
+
+    addForUser(req, res) {
+        Record
+            .build(req.body)
+            .save()
+            .then(record => {
+                User.findById(req.params.id).then(user => {
+                    user.addRecord(record);
+                    res.json(record);
+                })
+            }).catch(() => {
+            res.sendStatus(422);
+        })
+    },
+
     update(req, res) {
         Record.findById(req.params.id).then(record => {
             return record.update(req.body);

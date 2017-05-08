@@ -1,5 +1,8 @@
 import {createActionMap} from '../action';
-import {addSelfRecords, deleteSelfRecord, getSelf, getSelfRecords, updateSelfRecord} from "../../services/api/self";
+import {
+    addSelfRecords, addUserRecords, deleteSelfRecord, getSelf, getSelfRecords,
+    updateSelfRecord
+} from "../../services/api/self";
 import {showAlert} from "../alert/alert.actions";
 import {deleteRecord, getUserRecords} from "../../services/api/users";
 import * as _ from "lodash";
@@ -26,8 +29,8 @@ const deleteRecordSuccess = (record) => ({
     record
 });
 
-export const getSelfRecordsAction = (date) =>
-    (dispatch) => getSelfRecords(date)
+export const getSelfRecordsAction = (date, dateTo) =>
+    (dispatch) => getSelfRecords(date, dateTo)
         .then(response =>
             dispatch(getSelfRecordsSuccess(response.map(({date, ...rest}) => ({date: new Date(date), time: new Date(date), ...rest}))))
         )
@@ -42,7 +45,7 @@ export const getUserRecordsAction = (user, date, dateTo) =>
     (dispatch) => getUserRecords(user, date, dateTo)
         .then(
             response => {
-                dispatch(getSelfRecordsSuccess(response));
+                dispatch(getSelfRecordsSuccess(response.map(({date, ...rest}) => ({date: new Date(date), time: new Date(date), ...rest}))));
             }
         )
         .catch(
@@ -53,11 +56,31 @@ export const addSelfRecordAction = (record) =>
     (dispatch) => addSelfRecords(record)
         .then(
             ({date, ...rest}) => {
-                dispatch(addSelfRecordSuccess({
-                    date: new Date(date),
-                    time: new Date(date),
-                    ...rest
-                }));
+                // dispatch(addSelfRecordSuccess({
+                //     date: new Date(date),
+                //     time: new Date(date),
+                //     ...rest
+                // }));
+                dispatch(showAlert({message: 'New record added'}));
+            }
+
+        )
+        .catch(
+            error => {
+                error.data.map(err => dispatch(showAlert({message: err.message})))
+            }
+        );
+
+
+export const addUserRecordAction = (user, record) =>
+    (dispatch) => addUserRecords(user, record)
+        .then(
+            ({date, ...rest}) => {
+                // dispatch(addSelfRecordSuccess({
+                //     date: new Date(date),
+                //     time: new Date(date),
+                //     ...rest
+                // }));
                 dispatch(showAlert({message: 'New record added'}));
             }
 

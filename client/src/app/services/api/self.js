@@ -12,8 +12,8 @@ export const updateSelf = ({name, lastName}) => {
     });
 };
 
-export const getSelfRecords = (date) => {
-    return get(resources.SELF.RECORDS, {date: date.toISOString()});
+export const getSelfRecords = (date, dateTo) => {
+    return get(resources.SELF.RECORDS, {date: date.toISOString(), dateTo: dateTo.toISOString()});
 };
 
 export const addSelfRecords = ({date, time, description, amount, comment}) => {
@@ -26,6 +26,16 @@ export const addSelfRecords = ({date, time, description, amount, comment}) => {
     return post(resources.SELF.RECORDS, {date: constructedDate, description, amount, comment});
 };
 
+export const addUserRecords = ({id: userId}, {date, time, description, amount, comment}) => {
+    let constructedDate = _.clone(date);
+    constructedDate.setHours(time.getHours());
+    constructedDate.setMinutes(time.getMinutes());
+    constructedDate.setSeconds(0);
+    constructedDate.setMilliseconds(0);
+
+    return post(`${resources.USERS}/${userId}/${resources.RECORDS}`, {date: constructedDate, description, amount, comment});
+};
+
 
 export const updateSelfRecord = ({id, date, time, description, amount, comment}) => {
     let constructedDate = _.clone(date);
@@ -34,9 +44,9 @@ export const updateSelfRecord = ({id, date, time, description, amount, comment})
     constructedDate.setSeconds(0);
     constructedDate.setMilliseconds(0);
 
-    return patch(resources.SELF.RECORDS, id, {date: constructedDate, description, amount, comment});
+    return patch(resources.RECORDS, id, {date: constructedDate, description, amount, comment});
 };
 
 export const deleteSelfRecord = (record) => {
-    return deleteMethod(resources.SELF.RECORDS, record.id);
+    return deleteMethod(resources.RECORDS, record.id);
 };
