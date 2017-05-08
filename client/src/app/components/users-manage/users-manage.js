@@ -17,7 +17,9 @@ class UsersManage extends React.Component {
         super(props);
         this.state = {
             modalOpen: false,
-            currentUser: {}
+            currentUser: {},
+            confirmDeleteOpen: false,
+            rowForDelete: null
         }
     }
 
@@ -40,6 +42,21 @@ class UsersManage extends React.Component {
             return {modalOpen: false};
         });
     }
+
+    openConfirmDelete(row) {
+        this.setState({
+            rowForDelete: row,
+            confirmDeleteOpen: true
+        })
+    }
+
+    onConfirmDeleteSuccess = () => {
+        this.props.deleteUserAction(this.state.rowForDelete);
+        this.setState({
+            rowForDelete: null,
+            confirmDeleteOpen: false
+        })
+    };
 
     render() {
         const actions = [
@@ -108,7 +125,8 @@ class UsersManage extends React.Component {
                                     </TableRowColumn>
                                     <TableRowColumn>
                                         <RaisedButton label="Delete" secondary={true} onTouchTap={() => {
-                                            this.props.deleteUserAction(row)
+                                            this.openConfirmDelete(row);
+
                                         }}/>
                                     </TableRowColumn>
                                 </TableRow>
@@ -130,7 +148,10 @@ class UsersManage extends React.Component {
                         role={this.props.self.role}
                     />
                 </Dialog>
-                <ConfirmModal modalOpen={}/>
+                <ConfirmModal
+                    message={'Are you sure you want to delete this user?'}
+                    modalOpen={this.state.confirmDeleteOpen}
+                    onSuccess={this.onConfirmDeleteSuccess}/>
             </div>
         )
     }

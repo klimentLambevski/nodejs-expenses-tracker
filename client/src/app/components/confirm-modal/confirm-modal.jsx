@@ -13,6 +13,9 @@ class ConfirmModal extends React.Component {
         if(result) {
             this.props.onSuccess && this.props.onSuccess(this.props.value);
         }
+        this.setState({
+            modalOpen: false
+        })
     };
 
     componentWillReceiveProps(nextProps) {
