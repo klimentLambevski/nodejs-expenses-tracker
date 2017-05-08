@@ -7,15 +7,19 @@ const Record = sequelize.define('record', {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
     },
-    workedFrom: {
+    date: {
         type: DataTypes.DATE,
         allowNull: false
     },
-    workedTo: {
-        type: DataTypes.DATE,
+    description: {
+        type: DataTypes.TEXT,
         allowNull: false
     },
-    notes: {
+    amount: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+    },
+    comment: {
         type: DataTypes.TEXT,
         allowNull: true
     }

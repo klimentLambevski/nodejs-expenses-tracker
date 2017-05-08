@@ -1,0 +1,13 @@
+.records-manage {
+  .records-manage-actions, .records-manage-preview{
+    width: auto;
+    display: block;
+    margin: 20px 30px;
+  }
+
+  .records-manage-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

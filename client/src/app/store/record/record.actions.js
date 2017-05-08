@@ -1,11 +1,13 @@
 import {createActionMap} from '../action';
-import {addSelfRecords, deleteSelfRecord, getSelf, getSelfRecords} from "../../services/api/self";
+import {addSelfRecords, deleteSelfRecord, getSelf, getSelfRecords, updateSelfRecord} from "../../services/api/self";
 import {showAlert} from "../alert/alert.actions";
 import {deleteRecord, getUserRecords} from "../../services/api/users";
+import * as _ from "lodash";
 
 export const actions = createActionMap({
     GET_RECORDS: '',
     ADD_RECORD: '',
+    UPDATE_RECORD: '',
     DELETE_RECORD: ''
 }, 'self');
 
@@ -26,13 +28,14 @@ const deleteRecordSuccess = (record) => ({
 
 export const getSelfRecordsAction = (date) =>
     (dispatch) => getSelfRecords(date)
-        .then(
-            response => {
-                dispatch(getSelfRecordsSuccess(response));
-            }
+        .then(response =>
+            dispatch(getSelfRecordsSuccess(response.map(({date, ...rest}) => ({date: new Date(date), time: new Date(date), ...rest}))))
         )
         .catch(
-            error => dispatch(showAlert('Error trying to get records'))
+            error => {
+                console.log(error);
+                dispatch(showAlert('Error trying to get records'))
+            }
         );
 
 export const getUserRecordsAction = (user, date, dateTo) =>
@@ -46,11 +49,15 @@ export const getUserRecordsAction = (user, date, dateTo) =>
             error => dispatch(showAlert({message: 'Error trying to get records'}))
         );
 
-export const addSelfRecordAction = (fromDate, toDate, notes) =>
-    (dispatch) => addSelfRecords({fromDate, toDate, notes})
+export const addSelfRecordAction = (record) =>
+    (dispatch) => addSelfRecords(record)
         .then(
-            response => {
-                dispatch(addSelfRecordSuccess(response));
+            ({date, ...rest}) => {
+                dispatch(addSelfRecordSuccess({
+                    date: new Date(date),
+                    time: new Date(date),
+                    ...rest
+                }));
                 dispatch(showAlert({message: 'New record added'}));
             }
 
@@ -60,6 +67,19 @@ export const addSelfRecordAction = (fromDate, toDate, notes) =>
                 error.data.map(err => dispatch(showAlert({message: err.message})))
             }
         );
+
+export const updateSelfRecordAction = (record) =>
+    (dispatch) => updateSelfRecord(record)
+        .then(({date, ...rest}) => {
+            dispatch({
+                type: actions.UPDATE_RECORD,
+                record: {
+                    date: new Date(date),
+                    time: new Date(date),
+                    ...rest
+                }
+            })
+        }).catch(err => console.log('update record err -->', err));
 
 export const deleteRecordAction = (user, record) =>
     (dispatch) => deleteRecord(user, record)

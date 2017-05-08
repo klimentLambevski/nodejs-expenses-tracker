@@ -4,18 +4,14 @@ export const getUsers = (roles) => {
     return get(resources.USERS, {roles});
 };
 
-export const createUser = ({workingHoursFrom, workingHoursTo, ...rest}) => {
+export const createUser = ({...rest}) => {
     return post(resources.USERS, {
-        workingHoursFrom: parseInt(workingHoursFrom),
-        workingHoursTo: parseInt(workingHoursTo),
         ...rest
     });
 };
 
-export const updateUser = ({workingHoursFrom, workingHoursTo, name, lastName, id, role}) => {
+export const updateUser = ({name, lastName, id, role}) => {
     return patch(resources.USERS, id, {
-        workingHoursFrom: parseInt(workingHoursFrom),
-        workingHoursTo: parseInt(workingHoursTo),
         name,
         lastName,
         role

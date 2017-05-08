@@ -11,16 +11,12 @@ const usersValidation = {
         password: Joi.string().required(),
         password_repeat: Joi.string().required().valid(Joi.ref('password')),
         lastName: Joi.string().required(),
-        name: Joi.string().required(),
-        workingHoursFrom: Joi.number().min(0).max(23).less(Joi.ref('workingHoursTo')).optional(),
-        workingHoursTo: Joi.number().min(1).max(24).optional()
+        name: Joi.string().required()
     }),
     update: Joi.object().keys({
         role: Joi.any().valid('admin', 'manager', 'regular').optional(),
         lastName: Joi.string().required(),
-        name: Joi.string().required(),
-        workingHoursFrom: Joi.number().min(0).max(23).less(Joi.ref('workingHoursTo')).optional(),
-        workingHoursTo: Joi.number().min(1).max(24).optional()
+        name: Joi.string().required()
     })
 };
 

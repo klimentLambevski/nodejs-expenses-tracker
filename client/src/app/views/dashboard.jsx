@@ -5,6 +5,7 @@ import {UsersManage} from "../components/users-manage/users-manage";
 import {AdminView} from "./admin";
 import {Header} from "../components/header/header";
 import {push} from 'react-router-redux';
+import {RecordsManage} from "../components/records-manage/records-manage";
 
 class DashboardView extends React.Component {
     constructor(props){
@@ -30,7 +31,7 @@ class DashboardView extends React.Component {
             return (
                 <section>
                     <Header />
-                    <UserTimeline/>
+                    <RecordsManage/>
                 </section>
             )
         } else if(this.props.self.role === 'manager') {
