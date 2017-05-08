@@ -31,12 +31,6 @@ const User = sequelize.define('user', {
         allowNull: false,
         values: ['admin', 'manager', 'regular'],
         defaultValue: 'regular'
-    },
-    workingHoursFrom: {
-        type: DataTypes.INTEGER
-    },
-    workingHoursTo: {
-        type: DataTypes.INTEGER
     }
 }, {
     indexes: [{unique: true, fields: ['email']}],

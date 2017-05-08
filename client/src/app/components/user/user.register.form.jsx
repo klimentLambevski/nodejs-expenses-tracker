@@ -24,24 +24,6 @@ const UserRegisterForm = ({handleSubmit, pristine, submitting, invalid, initialV
                     label="Last name"
                 />
             </div>
-
-            <div>
-                <Field
-                    component={renderTextField}
-                    type="number"
-                    name="workingHoursFrom"
-                    label="Working hours from"
-                />
-            </div>
-
-            <div>
-                <Field
-                    component={renderTextField}
-                    type="number"
-                    name="workingHoursTo"
-                    label="Working hours to"
-                />
-            </div>
             {
                 (role && role !== 'regular') && (
                     <div>

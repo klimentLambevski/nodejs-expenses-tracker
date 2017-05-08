@@ -79,8 +79,6 @@ class UsersManage extends React.Component {
                                 <TableHeaderColumn tooltip="The Email">Email</TableHeaderColumn>
                                 <TableHeaderColumn tooltip="The Name">Name</TableHeaderColumn>
                                 <TableHeaderColumn tooltip="The Last name">Last name</TableHeaderColumn>
-                                <TableHeaderColumn tooltip="Start of the work day">Working from</TableHeaderColumn>
-                                <TableHeaderColumn tooltip="End of the work day">Working to</TableHeaderColumn>
                                 <TableHeaderColumn tooltip="Role">Role</TableHeaderColumn>
                                 <TableHeaderColumn tooltip="Edit user">Edit</TableHeaderColumn>
                                 <TableHeaderColumn tooltip="Delete">Delete</TableHeaderColumn>
@@ -98,8 +96,6 @@ class UsersManage extends React.Component {
                                     <TableRowColumn>{row.email}</TableRowColumn>
                                     <TableRowColumn>{row.name}</TableRowColumn>
                                     <TableRowColumn>{row.lastName}</TableRowColumn>
-                                    <TableRowColumn>{row.workingHoursFrom}</TableRowColumn>
-                                    <TableRowColumn>{row.workingHoursTo}</TableRowColumn>
                                     <TableRowColumn>{row.role}</TableRowColumn>
                                     <TableRowColumn>
                                         <RaisedButton label="Edit" primary={true} onTouchTap={() => {
@@ -130,7 +126,7 @@ class UsersManage extends React.Component {
                         role={this.props.self.role}
                     />
                 </Dialog>
-                <ConfirmModal modalOpen={}/>
+                {/*<ConfirmModal modalOpen={}/>*/}
             </div>
         )
     }

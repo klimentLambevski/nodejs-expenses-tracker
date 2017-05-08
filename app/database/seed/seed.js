@@ -7,8 +7,6 @@ sequelize.sync({force: true}).then(() => {
         password: 'test',
         name: 'test',
         lastName: 'test',
-        workingHoursFrom: 2,
-        workingHoursTo: 8,
         role: 'admin'
     });
     User.create({
@@ -16,8 +14,6 @@ sequelize.sync({force: true}).then(() => {
         password: 'test',
         name: 'test',
         lastName: 'test',
-        workingHoursFrom: 2,
-        workingHoursTo: 8,
         role: 'manager'
     });
     User.create({
@@ -25,8 +21,6 @@ sequelize.sync({force: true}).then(() => {
         password: 'test',
         name: 'test',
         lastName: 'test',
-        workingHoursFrom: 2,
-        workingHoursTo: 8,
         role: 'regular'
     })
 });

@@ -7,6 +7,13 @@ const recordsReducer = (state = [], action) => {
             return action.records;
         case actions.ADD_RECORD:
             return [...state, action.record];
+        case actions.UPDATE_RECORD:
+            return state.map(record =>
+                record.id === action.record.id ?
+                    action.record
+                    :
+                    Object.assign({}, record)
+            );
         case actions.DELETE_RECORD:
             return state.reduce((acc, record) => {
                 if(record.id !== action.record.id) {

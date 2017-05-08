@@ -4,38 +4,39 @@ const sequelize = require('sequelize');
 
 const recordValidation = {
     store: Joi.object().keys({
-        workedFrom: Joi.date().iso().required(),
-        workedTo: Joi.date().iso().min(Joi.ref('workedFrom')).required(),
-        notes: Joi.any().optional()
+        date: Joi.date().iso().required(),
+        description: Joi.string().required(),
+        amount: Joi.number().positive().required(),
+        comment: Joi.string()
     })
 };
 
 const recordMethods = {
     get(req, res) {
-        let dateFrom =  new Date(req.query.date);
+        let dateFrom = new Date(req.query.date);
         let dateTo = new Date(req.query.date);
         dateTo.setDate(dateTo.getDate() + 1);
-        if(req.query.dateTo) {
+        if (req.query.dateTo) {
             dateTo = new Date(req.query.dateTo);
         }
         req.user.getRecords({
             where: {
-                workedFrom: {
+                date: {
                     $between: [dateFrom, dateTo]
                 }
             }
         }).then(records => res.json(records));
     },
     getForUser(req, res) {
-        let dateFrom =  new Date(req.query.date);
+        let dateFrom = new Date(req.query.date);
         let dateTo = new Date(req.query.date);
         dateTo.setDate(dateTo.getDate() + 1);
-        if(req.query.dateTo) {
+        if (req.query.dateTo) {
             dateTo = new Date(req.query.dateTo);
         }
 
         User.findById(req.params.id).then(user => {
-            if(user) {
+            if (user) {
                 user.getRecords({
                     where: {
                         workedFrom: {
@@ -49,15 +50,15 @@ const recordMethods = {
         })
     },
     getReportForUser(req, res) {
-        let dateFrom =  new Date(req.query.date);
+        let dateFrom = new Date(req.query.date);
         let dateTo = new Date(req.query.date);
         dateTo.setDate(dateTo.getDate() + 1);
-        if(req.query.dateTo) {
+        if (req.query.dateTo) {
             dateTo = new Date(req.query.dateTo);
         }
 
         User.findById(req.params.id).then(user => {
-            if(user) {
+            if (user) {
                 user.getRecords({
                     where: {
                         workedFrom: {
@@ -73,37 +74,16 @@ const recordMethods = {
         })
     },
     store(req, res) {
-        req.user.getRecords({
-            where: {
-                $or: [
-                    {
-                        workedFrom: {
-                            $between: [new Date(req.body.workedFrom), new Date(req.body.workedTo)]
-                        }
-                    },{
-                        workedTo: {
-                            $between: [new Date(req.body.workedFrom), new Date(req.body.workedTo)]
-                        }
-                    }
 
-                ]
-
-            }
-        }).then(records => {
-            if(records.length > 0) {
-                res.status(422).json([{message: 'You can\'t add records on already filled spots'}])
-            } else {
-                Record
-                    .build(req.body)
-                    .save()
-                    .then(record => {
-                        req.user.addRecord(record);
-                        res.json(record);
-                    }).catch(() => {
-                    res.sendStatus(422);
-                })
-            }
-        });
+        Record
+            .build(req.body)
+            .save()
+            .then(record => {
+                req.user.addRecord(record);
+                res.json(record);
+            }).catch(() => {
+            res.sendStatus(422);
+        })
 
     },
     update(req, res) {
@@ -113,7 +93,7 @@ const recordMethods = {
     },
     delete(req, res) {
         Record.findById(req.params.recordId).then(record => {
-            if(record) {
+            if (record) {
                 record.destroy().then(_ => res.json(record));
             } else {
                 res.status(422).json([{message: 'Record not found'}])
