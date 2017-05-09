@@ -1,0 +1,13 @@
+.expenses-report {
+  .expenses-report-actions, .expenses-report-preview{
+    width: auto;
+    display: block;
+    margin: 20px 30px;
+  }
+
+  .expenses-report-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

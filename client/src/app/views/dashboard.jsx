@@ -20,9 +20,13 @@ class DashboardView extends React.Component {
     componentWillReceiveProps(nextProps) {
         if(nextProps.self && nextProps.self.role === 'admin') {
             if(nextProps.location.pathname === '/dashboard') {
-                this.props.push('/dashboard/users');
+                this.props.push('/dashboard/admin');
             }
 
+        } else if(nextProps.self && nextProps.self.role === 'regular') {
+            if(nextProps.location.pathname === '/dashboard') {
+                this.props.push('/dashboard/self');
+            }
         }
     }
 
@@ -30,8 +34,7 @@ class DashboardView extends React.Component {
         if(this.props.self.role === 'regular') {
             return (
                 <section>
-                    <Header />
-                    <RecordsManage/>
+                    {this.props.children}
                 </section>
             )
         } else if(this.props.self.role === 'manager') {
@@ -43,9 +46,9 @@ class DashboardView extends React.Component {
             )
         } else {
             return (
-                <AdminView>
+                <section>
                     {this.props.children}
-                </AdminView>
+                </section>
             )
         }
     }

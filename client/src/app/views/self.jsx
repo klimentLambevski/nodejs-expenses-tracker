@@ -1,15 +1,14 @@
-import {getSelfAction} from "../store/self/self.actions";
 import {connect} from "react-redux";
 import {Tab, Tabs} from "material-ui";
 import {Header} from "../components/header/header";
 import {push} from 'react-router-redux';
 
 
-class AdminView extends React.Component {
+class SelfView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            route: '/dashboard/admin/users'
+            route: '/dashboard/self/expenses'
         }
     }
 
@@ -32,11 +31,9 @@ class AdminView extends React.Component {
                     value={this.state.route}
                     onChange={this.updateRoute.bind(this)}
                 >
-                    <Tab label="Manage users" value="/dashboard/admin/users">
+                    <Tab label="Manage expenses" value="/dashboard/self/expenses">
                     </Tab>
-                    <Tab label="Browse user expenses" value="/dashboard/admin/expenses">
-                    </Tab>
-                    <Tab label="Browse user timeline-report" value="/dashboard/admin/timeline-report">
+                    <Tab label="Expenses report" value="/dashboard/self/reports">
                     </Tab>
                 </Tabs>
                 {this.props.children}
@@ -49,10 +46,10 @@ const mapStateToProps = (state) => ({
     self: state.common.self
 });
 
-AdminView = connect(mapStateToProps, {
+SelfView = connect(mapStateToProps, {
     push
-})(AdminView);
+})(SelfView);
 
 export {
-    AdminView
+    SelfView
 }
