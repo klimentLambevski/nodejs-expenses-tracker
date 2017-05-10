@@ -31,6 +31,14 @@ const User = sequelize.define('user', {
         allowNull: false,
         values: ['admin', 'manager', 'regular'],
         defaultValue: 'regular'
+    },
+    activationId: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4
+    },
+    activated: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 }, {
     indexes: [{unique: true, fields: ['email']}],

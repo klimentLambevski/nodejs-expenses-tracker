@@ -5,7 +5,8 @@ const baseUrl = '/api';
 export const resources = {
     AUTH: {
         LOGIN: '/auth/login',
-        REGISTER: '/auth/register'
+        REGISTER: '/auth/register',
+        ACTIVATE: '/auth/activate'
     },
     SELF: {
         GET: '/self',

@@ -7,20 +7,23 @@ sequelize.sync({force: true}).then(() => {
         password: 'test',
         name: 'Admin',
         lastName: 'Lastname',
-        role: 'admin'
+        role: 'admin',
+        activated: true
     });
     User.create({
         email: 'manager@test.com',
         password: 'test',
         name: 'Manager',
         lastName: 'Lastname',
-        role: 'manager'
+        role: 'manager',
+        activated: true
     });
     User.create({
         email: 'regular@test.com',
         password: 'test',
         name: 'Regular',
         lastName: 'Lastname',
-        role: 'regular'
+        role: 'regular',
+        activated: true
     })
 });

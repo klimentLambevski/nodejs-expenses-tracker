@@ -16,8 +16,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-
-        if (this.props.isAuthenticated()) {
+        if (this.props.isAuthenticated(this.props.location.pathname)) {
             this.props.getSelfAction().then(() => {
                 this.setState({
                     isLoading: false

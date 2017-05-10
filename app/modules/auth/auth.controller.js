@@ -17,7 +17,12 @@ const methods = {
         User.findOne({where: {
             email: email
         }}).then((user) => {
-            if(user &&  user.authenticate(password)) {
+            if(user && !user.activated) {
+                res.status(401).json([{
+                    message: 'Account has not been activated'
+                }]);
+            }
+            else if(user &&  user.authenticate(password)) {
                 let payload = {
                     id: user.id
                 };
@@ -26,7 +31,9 @@ const methods = {
                     token: token
                 });
             } else {
-                res.sendStatus(401);
+                res.status(401).json([{
+                    message: 'Username or password are not valid'
+                }]);
             }
         });
     }

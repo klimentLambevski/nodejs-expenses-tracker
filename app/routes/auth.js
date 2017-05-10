@@ -7,6 +7,7 @@ const Auth = Router();
 
 Auth.post('/login', validate(validation.login), login);
 Auth.post('/register', validate(usersValidation.store), usersMethods.register);
+Auth.post('/activate', usersMethods.activate);
 
 module.exports = {
     Auth

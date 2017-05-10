@@ -57,18 +57,23 @@ export const registerUserAction = (user) =>
             });
         });
 
-export const isAuthenticated = () =>
+export const isAuthenticated = (path) =>
     (dispatch) => {
         const token = LocalStorageService.getItem('AUTH_TOKEN');
-        console.log(token);
         if (!token) {
             dispatch(notAuthenticated());
-            dispatch(push('/login'));
+
+            if(!path.startsWith('/activation') && !path.startsWith('/register')) {
+                dispatch(push('/login'));
+            }
             return false;
         } else {
             axios.defaults.headers.common['Authorization'] = `JWT ${token}`;
             dispatch(authSuccess(token));
-            dispatch(push('/dashboard'));
+            if(!path.startsWith('/dashboard')) {
+                dispatch(push('/dashboard'));
+            }
+
             return true;
         }
     };
@@ -79,4 +84,3 @@ export const logoutUser = () =>
             dispatch(logoutSuccess());
             dispatch(push('/login'));
         };
-

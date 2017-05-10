@@ -2,6 +2,10 @@ const Joi = require('joi');
 const {User} = require('../../models');
 const _ = require('lodash');
 const sequelize = require("sequelize");
+const authConfig = require("../../config/auth.js");
+const jwt = require("jwt-simple");
+
+const {sentActivationMail} = require('../../utils/mailer/mailer');
 
 
 const usersValidation = {
@@ -67,6 +71,9 @@ const usersMethods = {
             res.sendStatus(401);
         } else {
             User.create(req.body).then((user) => {
+
+                sentActivationMail(user, req.headers.origin);
+
                 res.json(user);
             }, (err) => {
                 if(err.name === 'SequelizeUniqueConstraintError') {
@@ -80,6 +87,7 @@ const usersMethods = {
     },
     register(req, res) {
         User.create(req.body).then((user) => {
+            sentActivationMail(user, req.headers.origin);
             res.json(user);
         }, (err) => {
             if(err.name === 'SequelizeUniqueConstraintError') {
@@ -113,6 +121,26 @@ const usersMethods = {
             } else {
                 res.status(422).json([{message: 'User not found'}]);
             }
+        })
+    },
+    activate(req, res) {
+        User.findOne({
+            where: {
+                activationId: req.body.activationId
+            }
+        }).then(user => {
+            user.activated = true;
+            user.save().then(_ => {
+                let payload = {
+                    id: user.id
+                };
+                let token = jwt.encode(payload, authConfig.jwt.jwtSecret);
+                res.json({
+                    token: token
+                });
+            })
+        }).catch(err => {
+            res.status(422).json([{message: 'Activation link not valid'}]);
         })
     }
 };
