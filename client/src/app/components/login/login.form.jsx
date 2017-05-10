@@ -1,6 +1,7 @@
 import { Field } from 'redux-form';
 import RaisedButton from 'material-ui/RaisedButton';
 import { renderTextField } from '../inputs/inputs';
+import {Captcha} from "../recaptcha";
 
 const LoginForm =({ handleSubmit, pristine, submitting, invalid }) => (
     <form onSubmit={handleSubmit} noValidate autoComplete="off">
@@ -21,8 +22,10 @@ const LoginForm =({ handleSubmit, pristine, submitting, invalid }) => (
                 label="Password"
             />
         </div>
-
         <div>
+            <Field component={Captcha} name="captcha"/>
+        </div>
+        <div style={{textAlign: 'center'}}>
             <RaisedButton
                 type="submit"
                 label="Sign In"
@@ -30,6 +33,7 @@ const LoginForm =({ handleSubmit, pristine, submitting, invalid }) => (
                 disabled={pristine || submitting || invalid}
             />
         </div>
+
     </form>
 );
 

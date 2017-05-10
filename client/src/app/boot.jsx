@@ -6,7 +6,6 @@ import { Router, hashHistory } from "react-router";
 import { syncHistoryWithStore } from 'react-router-redux'
 import storeInit from './store/store';
 import routes from './routes';
-import {isAuthenticated} from "./store/auth/auth.actions";
 
 injectTapEventPlugin();
 
