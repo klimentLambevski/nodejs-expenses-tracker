@@ -20,12 +20,17 @@ const methods = {
         User.findOne({where: {
             email: email
         }}).then((user) => {
-            if(user && !user.activated) {
+            if(!user) {
+                res.status(401).json([{
+                    message: 'Username or password are not valid'
+                }]);
+            }
+            if(!user.activated) {
                 res.status(401).json([{
                     message: 'Account has not been activated'
                 }]);
             }
-            else if(user && user.authenticate(password)) {
+            else if(user.authenticate(password)) {
                 request.post('https://www.google.com/recaptcha/api/siteverify', {
                     form:{
                         secret: '6LeH4CAUAAAAAL1KQcoMI-JIlkfJGPxpSLQ8ev_1',
@@ -50,9 +55,19 @@ const methods = {
                 });
 
             } else {
-                res.status(401).json([{
-                    message: 'Username or password are not valid'
-                }]);
+                if(user.loginRetries >= 3) {
+                    res.status(401).json([{
+                        message: 'Too many login attempts. Please contact admin/manager in order to unblock your account'
+                    }]);
+                } else {
+                    user.loginRetries ++;
+                    user.save().then(_ => {
+                        res.status(401).json([{
+                            message: 'Username or password are not valid'
+                        }]);
+                    })
+                }
+
             }
         });
 

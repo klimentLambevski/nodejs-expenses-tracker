@@ -142,6 +142,19 @@ const usersMethods = {
         }).catch(err => {
             res.status(422).json([{message: 'Activation link not valid'}]);
         })
+    },
+
+    unblock(req, res) {
+        User.findById(req.params.id).then((user) => {
+            if (user) {
+                user.loginRetries = 0;
+                user.save().then(u => {
+                    res.json(u);
+                })
+            } else {
+                res.status(422).json([{message: 'User not found'}]);
+            }
+        })
     }
 };
 

@@ -39,6 +39,10 @@ const User = sequelize.define('user', {
     activated: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
+    },
+    loginRetries: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
     }
 }, {
     indexes: [{unique: true, fields: ['email']}],

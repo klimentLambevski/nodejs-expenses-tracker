@@ -38,6 +38,8 @@ class AdminView extends React.Component {
                     </Tab>
                     <Tab label="Browse user expenses report" value="/dashboard/admin/reports">
                     </Tab>
+                    <Tab label="Invite people" value="/dashboard/admin/invitation">
+                    </Tab>
                 </Tabs>
                 {this.props.children}
             </div>

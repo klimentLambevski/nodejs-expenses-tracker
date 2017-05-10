@@ -1,6 +1,6 @@
 import {connect} from "react-redux";
 import {
-    createUserAction, deleteUserAction, getUsersAction, saveUserAction,
+    createUserAction, deleteUserAction, getUsersAction, saveUserAction, unblockUserAction,
     updateUserAction
 } from "../../store/users/users.actions";
 import {
@@ -58,6 +58,10 @@ class UsersManage extends React.Component {
         })
     };
 
+    unblockUser(user) {
+        this.props.unblockUserAction(user);
+    }
+
     render() {
         const actions = [
             <FlatButton
@@ -99,6 +103,7 @@ class UsersManage extends React.Component {
                                 <TableHeaderColumn tooltip="Role">Role</TableHeaderColumn>
                                 <TableHeaderColumn tooltip="Edit user">Edit</TableHeaderColumn>
                                 <TableHeaderColumn tooltip="Delete">Delete</TableHeaderColumn>
+                                <TableHeaderColumn tooltip="Is user blocked">User blocked</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>
                         <TableBody
@@ -124,6 +129,18 @@ class UsersManage extends React.Component {
                                             this.openConfirmDelete(row);
 
                                         }}/>
+                                    </TableRowColumn>
+
+                                    <TableRowColumn>
+                                        {
+                                            row.loginRetries >= 3 ? (
+                                                <RaisedButton label="Unblock" secondary={true} onTouchTap={() => {
+                                                    this.unblockUser(row);
+                                                }}/>
+                                            ):(
+                                                <span>User not blocked</span>
+                                            )
+                                        }
                                     </TableRowColumn>
                                 </TableRow>
                             ))}
@@ -161,7 +178,8 @@ const mapStateToProps = (state) => ({
 UsersManage = connect(mapStateToProps, {
     getUsersAction,
     saveUserAction,
-    deleteUserAction
+    deleteUserAction,
+    unblockUserAction
 })(UsersManage);
 
 export {
