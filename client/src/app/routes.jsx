@@ -21,7 +21,7 @@ export default (
                 <IndexRedirect to="/dashboard/admin/users"/>
                 <Route path="users" component={UsersManage}/>
                 <Route path="expenses" component={RecordsManage}/>
-                <Route path="timeline-report" component={TimelineReport}/>
+                <Route path="reports" component={ExpensesReport}/>
             </Route>
             <Route path="self" component={SelfView}>
                 <IndexRedirect to="/dashboard/self/expenses "/>

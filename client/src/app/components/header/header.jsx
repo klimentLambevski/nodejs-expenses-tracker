@@ -63,6 +63,7 @@ class Header extends React.Component {
         ];
         return (
             <AppBar
+                className="header"
                 title={this.props.self && `${this.props.self.name} ${this.props.self.lastName}`}
                 iconElementRight={this.actions}
                 iconElementLeft={<span></span>}

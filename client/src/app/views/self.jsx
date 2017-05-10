@@ -25,9 +25,10 @@ class SelfView extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="self-view">
                 <Header />
                 <Tabs
+                    className={'navigation'}
                     value={this.state.route}
                     onChange={this.updateRoute.bind(this)}
                 >

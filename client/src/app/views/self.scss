@@ -1,0 +1,11 @@
+@media print {
+  .self-view {
+    .header {
+      display: none !important;
+    }
+    .navigation {
+      display: none !important;
+
+    }
+  }
+}

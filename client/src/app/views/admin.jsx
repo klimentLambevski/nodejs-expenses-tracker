@@ -36,7 +36,7 @@ class AdminView extends React.Component {
                     </Tab>
                     <Tab label="Browse user expenses" value="/dashboard/admin/expenses">
                     </Tab>
-                    <Tab label="Browse user timeline-report" value="/dashboard/admin/timeline-report">
+                    <Tab label="Browse user expenses report" value="/dashboard/admin/reports">
                     </Tab>
                 </Tabs>
                 {this.props.children}

@@ -1,5 +1,5 @@
 .expenses-report {
-  .expenses-report-actions, .expenses-report-preview{
+  .expenses-report-actions, .expenses-report-preview {
     width: auto;
     display: block;
     margin: 20px 30px;
@@ -9,5 +9,60 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+  .expenses-report-preview {
+    .report {
+      width: 100%;
+      border: none;
+      border-collapse: collapse;
+      page-break-inside: auto;
+      tr {
+        page-break-inside: avoid;
+        page-break-after: auto
+      }
+      td {
+        padding: 10px 15px;
+      }
+      thead {
+        tr {
+          td {
+            border-bottom: 2px solid #000;
+          }
+        }
+      }
+      .day-total {
+        background: $clGrayLighterer;
+        td {
+          border-top: 1px solid $clGrayLight;
+          border-bottom: 2px solid $clGray;
+        }
+      }
+
+      .week-total {
+        background: $clGrayLighter;
+        td {
+          border-bottom: 2px solid #000;
+        }
+      }
+      .total {
+        background: $clGrayLight;
+      }
+    }
+  }
+}
+
+@media print {
+  .expenses-report {
+
+    .expenses-report-actions {
+      display: none !important;
+    }
+
+    .expenses-report-preview {
+      margin: 0 !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 10px !important;
+    }
   }
 }
