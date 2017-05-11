@@ -10,6 +10,7 @@ import {AdminView} from "./views/admin";
 import {SelfView} from "./views/self";
 import {ExpensesReport} from "./components/expenses-report/expenses-report";
 import {ActivationView} from "./views/activation";
+import {InvitationView} from "./components/invitation/invitation";
 
 
 export default (
@@ -24,6 +25,7 @@ export default (
                 <Route path="users" component={UsersManage}/>
                 <Route path="expenses" component={RecordsManage}/>
                 <Route path="reports" component={ExpensesReport}/>
+                <Route path="invitation" component={InvitationView}/>
             </Route>
             <Route path="self" component={SelfView}>
                 <IndexRedirect to="/dashboard/self/expenses "/>

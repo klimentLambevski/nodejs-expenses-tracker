@@ -25,6 +25,7 @@ Api.get('/users', [auth().authenticate(), authorizationMiddleware(['admin', 'man
 Api.post('/users', [auth().authenticate(), authorizationMiddleware(['admin', 'manager']), validationMiddleware(usersValidation.store)], usersMethods.store);
 Api.patch('/users/:id', [auth().authenticate(), authorizationMiddleware(['admin', 'manager']), validationMiddleware(usersValidation.update)], usersMethods.update);
 Api.delete('/users/:id', [auth().authenticate(), authorizationMiddleware(['admin', 'manager'])], usersMethods.delete);
+Api.post('/users/:id/unblock', [auth().authenticate(), authorizationMiddleware(['admin', 'manager'])], usersMethods.unblock);
 
 Api.get('/users/:id/records', [auth().authenticate(), authorizationMiddleware(['admin'])], recordMethods.getForUser);
 Api.post('/users/:id/records', [auth().authenticate(), authorizationMiddleware(['admin'])], recordMethods.addForUser);

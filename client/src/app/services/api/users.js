@@ -29,3 +29,6 @@ export const getUserRecords = (user, date, dateTo) => {
 export const deleteRecord = (user, record) => {
     return deleteMethod(`${resources.USERS}/${user.id}${resources.RECORDS}`, record.id);
 };
+
+export const unblockUser = ({id}) =>
+    post(`${resources.USERS}/${id}/unblock`);

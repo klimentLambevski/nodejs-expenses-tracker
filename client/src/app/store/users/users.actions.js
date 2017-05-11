@@ -1,6 +1,6 @@
 import {createActionMap} from '../action';
 import {push} from 'react-router-redux';
-import {createUser, deleteUser, getUsers, updateUser} from "../../services/api/users";
+import {createUser, deleteUser, getUsers, unblockUser, updateUser} from "../../services/api/users";
 import {showAlert} from "../alert/alert.actions";
 
 
@@ -83,3 +83,10 @@ export const deleteUserAction = (data) =>
                 });
             }
         );
+
+export const unblockUserAction = (user) =>
+    (dispatch) => unblockUser(user)
+        .then(
+            response => dispatch(updateUserSuccess(response))
+        )
+        .catch(err => console.log('unblock user err -->', err));

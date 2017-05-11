@@ -9,7 +9,7 @@ class AdminView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            route: '/dashboard/admin/users'
+            route: this.props.location.pathname
         }
     }
 
@@ -37,6 +37,8 @@ class AdminView extends React.Component {
                     <Tab label="Browse user expenses" value="/dashboard/admin/expenses">
                     </Tab>
                     <Tab label="Browse user expenses report" value="/dashboard/admin/reports">
+                    </Tab>
+                    <Tab label="Invite people" value="/dashboard/admin/invitation">
                     </Tab>
                 </Tabs>
                 {this.props.children}
