@@ -4,8 +4,9 @@ const _ = require('lodash');
 const sequelize = require("sequelize");
 const authConfig = require("../../config/auth.js");
 const jwt = require("jwt-simple");
+var bcrypt = require("bcrypt");
 
-const {sentActivationMail} = require('../../utils/mailer/mailer');
+const {sentActivationMail, sendInvitationMail} = require('../../utils/mailer/mailer');
 
 
 const usersValidation = {
@@ -21,7 +22,17 @@ const usersValidation = {
         role: Joi.any().valid('admin', 'manager', 'regular').optional(),
         lastName: Joi.string().required(),
         name: Joi.string().required()
-    })
+    }),
+    invitation: Joi.object().keys({
+        email: Joi.string().email().required(),
+        password: Joi.string().required(),
+        password_repeat: Joi.string().required().valid(Joi.ref('password')),
+        lastName: Joi.string().required(),
+        name: Joi.string().required()
+    }),
+    invite: Joi.object().keys({
+        email: Joi.string().email().required()
+    }),
 };
 
 
@@ -155,6 +166,50 @@ const usersMethods = {
                 res.status(422).json([{message: 'User not found'}]);
             }
         })
+    },
+
+    completeInvitation(req, res) {
+        console.log(req.params);
+        User.findOne({
+            where: {
+                activationId: req.params.id
+            }
+        }).then(user => {
+            if(user) {
+                user.name = req.body.name;
+                user.lastName = req.body.lastName;
+                user.activated = true;
+
+                bcrypt.hash(req.body.password, 10, function(err, hash) {
+                    user.password = hash;
+                    user.save().then(_ => {
+                        let payload = {
+                            id: user.id
+                        };
+                        let token = jwt.encode(payload, authConfig.jwt.jwtSecret);
+                        res.json({
+                            token: token
+                        });
+                    });
+                });
+
+            } else {
+                res.status(422).json([{message: 'Invitation link not valid'}]);
+            }
+        })
+    },
+
+    invite(req, res) {
+        User.create({
+            email: req.body.email,
+            password: 'none',
+            name: 'none',
+            lastName: 'none',
+            role: 'regular'
+        }).then(user => {
+            sendInvitationMail(user, req.headers.origin);
+            res.json([{message: 'Invitation successfully sent to user'}]);
+        });
     }
 };
 

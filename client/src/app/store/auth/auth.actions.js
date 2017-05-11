@@ -63,14 +63,14 @@ export const isAuthenticated = (path) =>
         if (!token) {
             dispatch(notAuthenticated());
 
-            if(!path.startsWith('/activation') && !path.startsWith('/register')) {
+            if(!path.startsWith('/activation') && !path.startsWith('/register') && !path.startsWith('/invitation')) {
                 dispatch(push('/login'));
             }
             return false;
         } else {
             axios.defaults.headers.common['Authorization'] = `JWT ${token}`;
             dispatch(authSuccess(token));
-            if(!path.startsWith('/dashboard')) {
+            if(!path.startsWith('/dashboard') && !path.startsWith('/activation') && !path.startsWith('/invitation')) {
                 dispatch(push('/dashboard'));
             }
 

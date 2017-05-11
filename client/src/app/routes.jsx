@@ -11,6 +11,7 @@ import {SelfView} from "./views/self";
 import {ExpensesReport} from "./components/expenses-report/expenses-report";
 import {ActivationView} from "./views/activation";
 import {InvitationView} from "./components/invitation/invitation";
+import {CompleteInvitationView} from "./views/invitation";
 
 
 export default (
@@ -19,6 +20,7 @@ export default (
         <Route path="login" component={Login}/>
         <Route path="register" component={RegisterView}/>
         <Route path="activation/:id" component={ActivationView} name="activation"/>
+        <Route path="invitation/:email/:activation" component={CompleteInvitationView} name="invitation"/>
         <Route path="dashboard" component={DashboardView}>
             <Route path="admin" component={AdminView}>
                 <IndexRedirect to="/dashboard/admin/users"/>

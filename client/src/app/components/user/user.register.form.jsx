@@ -5,6 +5,7 @@ import {MenuItem} from "material-ui";
 
 const UserRegisterForm = ({handleSubmit, pristine, submitting, invalid, initialValues, role}) => {
     const roles = role !== 'admin' ? ['regular', 'manager'] : ['regular', 'manager', 'admin'];
+    console.log(initialValues);
     return (
         <form onSubmit={handleSubmit} noValidate autoComplete="off">
             <div>
@@ -49,7 +50,7 @@ const UserRegisterForm = ({handleSubmit, pristine, submitting, invalid, initialV
             <div>
                 <Field
                     component={renderTextField}
-                    disabled={!!initialValues.id}
+                    disabled={!!initialValues.id || !!initialValues.activationId}
                     type="text"
                     name="email"
                     label="Email"

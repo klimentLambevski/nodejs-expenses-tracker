@@ -1,7 +1,12 @@
 import {createActionMap} from '../action';
 import {push} from 'react-router-redux';
-import {createUser, deleteUser, getUsers, unblockUser, updateUser} from "../../services/api/users";
+import {
+    completeInvitation, createUser, deleteUser, getUsers, inviteMember, unblockUser,
+    updateUser
+} from "../../services/api/users";
 import {showAlert} from "../alert/alert.actions";
+import * as axios from "axios";
+import LocalStorageService from "../../services/storage/local.storage.service";
 
 
 export const actions = createActionMap({
@@ -90,3 +95,22 @@ export const unblockUserAction = (user) =>
             response => dispatch(updateUserSuccess(response))
         )
         .catch(err => console.log('unblock user err -->', err));
+
+export const inviteMemberAction = (email) =>
+    (dispatch) => inviteMember(email)
+        .then(res => {
+            dispatch(showAlert(res[0]));
+            return res;
+        })
+        .catch(err => console.log('invite member err -->', err));
+
+export const completeInvitationAction = (user) =>
+    (dispatch) => completeInvitation(user)
+        .then(res => {
+            LocalStorageService.setItem('AUTH_TOKEN', res.token);
+            axios.defaults.headers.common['Authorization'] = `JWT ${res.token}`;
+            return res;
+        }).catch(err => {
+            dispatch(showAlert(err.data));
+            return Promise.reject(err.data);
+        });

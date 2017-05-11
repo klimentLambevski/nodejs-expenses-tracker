@@ -2,6 +2,7 @@ import {connect} from "react-redux";
 import {Field, reduxForm} from "redux-form";
 import {renderTextField} from "../inputs/inputs";
 import {RaisedButton} from "material-ui";
+import {inviteMemberAction} from "../../store/users/users.actions";
 
 let InvitationForm = ({handleSubmit, pristine, submitting, invalid}) => (
     <form onSubmit={handleSubmit} autoComplete="off">
@@ -18,31 +19,40 @@ let InvitationForm = ({handleSubmit, pristine, submitting, invalid}) => (
 );
 
 InvitationForm = reduxForm({
-    form: 'invitation'
+    form: 'invitation',
+    enableReinitialize: true
 })(InvitationForm);
 
 class InvitationView extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            form: {}
+        }
     }
 
     sendInvitation = (data) => {
-        console.log(data);
+        this.props.inviteMemberAction(data.email).then(res => {
+            this.setState({
+                form: {}
+            })
+        })
     };
 
     render() {
         return (
             <div className="invitation">
                 <div className="form-container">
-                    <InvitationForm onSubmit={this.sendInvitation}/>
+                    <InvitationForm onSubmit={this.sendInvitation} initialValues={this.state.form}/>
                 </div>
             </div>
         )
     }
 }
 
-InvitationView = connect()(InvitationView);
+InvitationView = connect(null, {
+    inviteMemberAction
+})(InvitationView);
 
 export {
     InvitationView

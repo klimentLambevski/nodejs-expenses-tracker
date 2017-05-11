@@ -32,3 +32,9 @@ export const deleteRecord = (user, record) => {
 
 export const unblockUser = ({id}) =>
     post(`${resources.USERS}/${id}/unblock`);
+
+export const inviteMember = (email) =>
+    post(`${resources.USERS}/invite`, {email});
+
+export const completeInvitation = ({activationId, name, lastName, email, password, password_repeat}) =>
+    post(`${resources.USERS}/${activationId}/complete-invitation`, {name, lastName, email, password, password_repeat});

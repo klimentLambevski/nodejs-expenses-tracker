@@ -26,6 +26,8 @@ Api.post('/users', [auth().authenticate(), authorizationMiddleware(['admin', 'ma
 Api.patch('/users/:id', [auth().authenticate(), authorizationMiddleware(['admin', 'manager']), validationMiddleware(usersValidation.update)], usersMethods.update);
 Api.delete('/users/:id', [auth().authenticate(), authorizationMiddleware(['admin', 'manager'])], usersMethods.delete);
 Api.post('/users/:id/unblock', [auth().authenticate(), authorizationMiddleware(['admin', 'manager'])], usersMethods.unblock);
+Api.post('/users/:id/complete-invitation', [validationMiddleware(usersValidation.invitation)], usersMethods.completeInvitation);
+Api.post('/users/invite', [auth().authenticate(),authorizationMiddleware(['admin']), validationMiddleware(usersValidation.invite)], usersMethods.invite);
 
 Api.get('/users/:id/records', [auth().authenticate(), authorizationMiddleware(['admin'])], recordMethods.getForUser);
 Api.post('/users/:id/records', [auth().authenticate(), authorizationMiddleware(['admin'])], recordMethods.addForUser);

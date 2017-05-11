@@ -19,7 +19,23 @@ function sentActivationMail(user, host) {
     })
 }
 
+function sendInvitationMail(user, host) {
+    transporter.sendMail({
+        from: 'kliment.lambevski@gmail.com',
+        to: user.email,
+        subject: 'You have been invited to join our application',
+        html: `
+            <div>
+                <p>Please follow this <a href="${host}/#/invitation/${user.email}/${user.activationId}">link</a> in order to join in our application</p>
+            </div>
+        `
+    }, (err) => {
+        console.log(err);
+    })
+}
+
 module.exports = {
     transporter,
-    sentActivationMail
+    sentActivationMail,
+    sendInvitationMail
 };
