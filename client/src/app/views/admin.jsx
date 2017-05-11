@@ -9,7 +9,7 @@ class AdminView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            route: '/dashboard/admin/users'
+            route: this.props.location.pathname
         }
     }
 
