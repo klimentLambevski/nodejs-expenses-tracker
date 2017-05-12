@@ -11,6 +11,22 @@ import {Header} from "../header/header";
 import UserRegisterForm from '../user/user.register.form';
 import {withFormHandler} from "../../hocs/with-form-handler";
 import {ConfirmModal} from "../confirm-modal/confirm-modal";
+import {validateEmail, validateRequired} from "../../utils/validate";
+
+const validate = values => {
+    let errors = {};
+
+    validateRequired(values, 'email', errors);
+    validateEmail(values, 'email', errors);
+    validateRequired(values, 'name', errors);
+    validateRequired(values, 'lastName', errors);
+
+
+    return errors;
+};
+
+
+const UserRegisterFormRedux = withFormHandler(UserRegisterForm, 'create', validate);
 
 class UsersManage extends React.Component {
     constructor(props) {
@@ -72,7 +88,6 @@ class UsersManage extends React.Component {
             />,
         ];
 
-        const UserRegisterFormRedux = withFormHandler(UserRegisterForm, 'create');
 
         return (
             <div className="users-manage-component">

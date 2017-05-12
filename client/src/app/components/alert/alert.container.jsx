@@ -32,6 +32,7 @@ class AlertContainer extends React.Component {
                                     key={alert.alertId}
                                     message={this.getMessage(alert)}
                                     autoHideDuration={3000}
+                                    bodyStyle={alert.error ? {background: '#9e2424'} : {background: '#178051'}}
                                     onRequestClose={() => {
                                         this.onRemove(alert.alertId)
                                     }}

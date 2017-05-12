@@ -6,8 +6,22 @@ import {
     updateSelfRecordAction
 } from "../../store/record/record.actions";
 import {connect} from "react-redux";
+import {validateFloat, validateRequired} from "../../utils/validate";
 
-const RecordFormRedux = withFormHandler(RecordForm, 'create');
+const validate = values => {
+    let errors = {};
+
+    validateRequired(values, 'date', errors);
+    validateRequired(values, 'time', errors);
+    validateRequired(values, 'description', errors);
+    validateRequired(values, 'amount', errors);
+    validateFloat(values, 'amount', errors);
+
+    return errors;
+};
+
+
+const RecordFormRedux = withFormHandler(RecordForm, 'create', validate);
 
 class ManageRecord extends React.Component {
     constructor(props) {
@@ -39,7 +53,6 @@ class ManageRecord extends React.Component {
             });
         } else {
             return this.props.updateSelfRecordAction(record).then(res => {
-                console.log(res, 'update');
                 this.setState({modalOpen: false});
                 return res;
             });

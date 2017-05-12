@@ -38,23 +38,24 @@ export const authenticateUser = (user, redirectUrl) =>
         })
         .catch(error => {
             error.data.map((err) => {
-                dispatch(showAlert(err))
+                dispatch(showAlert(err, true))
             });
         });
 
 export const registerUserAction = (user) =>
     (dispatch) => register(user)
-        .then((data) => signIn(user))
         .then(data => {
-            LocalStorageService.setItem('AUTH_TOKEN', data.token);
-            axios.defaults.headers.common['Authorization'] = `JWT ${data.token}`;
-            dispatch(authSuccess(data.token));
-            dispatch(push('/dashboard'));
+            // LocalStorageService.setItem('AUTH_TOKEN', data.token);
+            // axios.defaults.headers.common['Authorization'] = `JWT ${data.token}`;
+            // dispatch(authSuccess(data.token));
+            // dispatch(push('/dashboard'));
         })
         .catch(error => {
             error.data.map((err) => {
-                dispatch(showAlert(err))
+                dispatch(showAlert(err, true))
             });
+
+            return Promise.reject(error.data);
         });
 
 export const isAuthenticated = (path) =>

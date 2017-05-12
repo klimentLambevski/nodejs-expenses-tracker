@@ -26,9 +26,10 @@ class AdminView extends React.Component {
 
     render() {
         return (
-            <div>
-                <Header />
+            <div className="admin">
+                <Header className="header"/>
                 <Tabs
+                    className={'navigation'}
                     value={this.state.route}
                     onChange={this.updateRoute.bind(this)}
                 >

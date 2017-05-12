@@ -1,11 +1,12 @@
 import {reduxForm} from 'redux-form';
 import {CircularProgress} from "material-ui";
 
-const withFormHandler = (WrappedForm, formName) => {
+const withFormHandler = (WrappedForm, formName, validate) => {
 
     const WrappedFormRedux = reduxForm({
         form: formName,
-        enableReinitialize: true
+        enableReinitialize: true,
+        validate
     })(WrappedForm);
 
     class WithFormHandler extends React.Component {

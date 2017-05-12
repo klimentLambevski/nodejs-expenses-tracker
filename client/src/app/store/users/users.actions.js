@@ -53,7 +53,7 @@ export const createUserAction = (data, dispatch) =>
         .catch(
             error => {
                 error.data.map((err) => {
-                    dispatch(showAlert(err))
+                    dispatch(showAlert(err, true))
                 });
             }
         );
@@ -66,7 +66,7 @@ export const updateUserAction = (data, dispatch) =>
         .catch(
             error => {
                 error.data.map((err) => {
-                    dispatch(showAlert(err))
+                    dispatch(showAlert(err, true))
                 });
             }
         );
@@ -84,7 +84,7 @@ export const deleteUserAction = (data) =>
         .catch(
             error => {
                 error.data.map((err) => {
-                    dispatch(showAlert(err))
+                    dispatch(showAlert(err, true))
                 });
             }
         );

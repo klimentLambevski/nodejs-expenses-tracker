@@ -9,7 +9,7 @@ const RecordForm = ({handleSubmit, pristine, submitting, invalid, initialValues,
                 <Field
                     component={renderDatePicker}
                     name="date"
-                    label="Date"
+                    label="Date *"
                 />
             </div>
 
@@ -17,7 +17,7 @@ const RecordForm = ({handleSubmit, pristine, submitting, invalid, initialValues,
                 <Field
                     component={renderTimePicker}
                     name="time"
-                    label="Time"
+                    label="Time *"
                 />
             </div>
             <div>
@@ -25,7 +25,7 @@ const RecordForm = ({handleSubmit, pristine, submitting, invalid, initialValues,
                     component={renderTextField}
                     type="text"
                     name="description"
-                    label="Description"
+                    label="Description *"
                 />
             </div>
             <div>
@@ -33,7 +33,7 @@ const RecordForm = ({handleSubmit, pristine, submitting, invalid, initialValues,
                     component={renderTextField}
                     type="number"
                     name="amount"
-                    label="Amount"
+                    label="Amount *"
                 />
             </div>
             <div>
@@ -41,7 +41,7 @@ const RecordForm = ({handleSubmit, pristine, submitting, invalid, initialValues,
                     component={renderTextField}
                     type="text"
                     name="comment"
-                    label="Comment"
+                    label="Comment *"
                 />
             </div>
             <div>

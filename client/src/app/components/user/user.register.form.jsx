@@ -5,7 +5,7 @@ import {MenuItem} from "material-ui";
 
 const UserRegisterForm = ({handleSubmit, pristine, submitting, invalid, initialValues, role}) => {
     const roles = role !== 'admin' ? ['regular', 'manager'] : ['regular', 'manager', 'admin'];
-    console.log(initialValues);
+
     return (
         <form onSubmit={handleSubmit} noValidate autoComplete="off">
             <div>
@@ -13,7 +13,7 @@ const UserRegisterForm = ({handleSubmit, pristine, submitting, invalid, initialV
                     component={renderTextField}
                     type="text"
                     name="name"
-                    label="Name"
+                    label="Name *"
                 />
             </div>
 
@@ -22,7 +22,7 @@ const UserRegisterForm = ({handleSubmit, pristine, submitting, invalid, initialV
                     component={renderTextField}
                     type="text"
                     name="lastName"
-                    label="Last name"
+                    label="Last name *"
                 />
             </div>
             {
@@ -30,7 +30,7 @@ const UserRegisterForm = ({handleSubmit, pristine, submitting, invalid, initialV
                     <div>
                         <Field
                             component={renderSelectField}
-                            label="Role"
+                            label="Role *"
                             name="role"
                         >
                             {
@@ -53,7 +53,7 @@ const UserRegisterForm = ({handleSubmit, pristine, submitting, invalid, initialV
                     disabled={!!initialValues.id || !!initialValues.activationId}
                     type="text"
                     name="email"
-                    label="Email"
+                    label="Email *"
                 />
             </div>
             {
@@ -63,14 +63,14 @@ const UserRegisterForm = ({handleSubmit, pristine, submitting, invalid, initialV
                             component={renderTextField}
                             type="password"
                             name="password"
-                            label="Password"
+                            label="Password *"
                         />
 
                         <Field
                             component={renderTextField}
                             type="password"
                             name="password_repeat"
-                            label="Repeat password"
+                            label="Repeat password *"
                         />
                     </div>
                 ) : null

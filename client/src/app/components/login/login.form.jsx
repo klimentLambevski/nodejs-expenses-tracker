@@ -10,7 +10,7 @@ const LoginForm =({ handleSubmit, pristine, submitting, invalid }) => (
                 component={renderTextField}
                 type="text"
                 name="email"
-                label="Email"
+                label="Email *"
             />
         </div>
 
@@ -19,7 +19,7 @@ const LoginForm =({ handleSubmit, pristine, submitting, invalid }) => (
                 component={renderTextField}
                 type="password"
                 name="password"
-                label="Password"
+                label="Password *"
             />
         </div>
         <div>

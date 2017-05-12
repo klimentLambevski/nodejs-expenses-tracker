@@ -37,7 +37,7 @@ export const getSelfRecordsAction = (date, dateTo) =>
         .catch(
             error => {
                 console.log(error);
-                dispatch(showAlert('Error trying to get records'))
+                dispatch(showAlert('Error trying to get records', true))
             }
         );
 
@@ -49,7 +49,7 @@ export const getUserRecordsAction = (user, date, dateTo) =>
             }
         )
         .catch(
-            error => dispatch(showAlert({message: 'Error trying to get records'}))
+            error => dispatch(showAlert({message: 'Error trying to get records'}, true))
         );
 
 export const addSelfRecordAction = (record) =>
@@ -67,7 +67,7 @@ export const addSelfRecordAction = (record) =>
         )
         .catch(
             error => {
-                error.data.map(err => dispatch(showAlert({message: err.message})))
+                error.data.map(err => dispatch(showAlert({message: err.message}, true)))
             }
         );
 
@@ -87,7 +87,7 @@ export const addUserRecordAction = (user, record) =>
         )
         .catch(
             error => {
-                error.data.map(err => dispatch(showAlert({message: err.message})))
+                error.data.map(err => dispatch(showAlert({message: err.message}, true)))
             }
         );
 
@@ -109,12 +109,12 @@ export const deleteRecordAction = (user, record) =>
         .then(
             response => {
                 dispatch(deleteRecordSuccess(response));
-                dispatch(showAlert({message: 'Record successfully deleted'}));
+                dispatch(showAlert({message: 'Record successfully deleted'}, true));
             }
 
         )
         .catch(
-            error => dispatch(showAlert('Error trying to get records'))
+            error => dispatch(showAlert('Error trying to get records', true))
         );
 
 export const deleteSelfRecordAction = (record) =>
@@ -122,12 +122,12 @@ export const deleteSelfRecordAction = (record) =>
         .then(
             response => {
                 dispatch(deleteRecordSuccess(response));
-                dispatch(showAlert({message: 'Record successfully deleted'}));
+                dispatch(showAlert({message: 'Record successfully deleted'}, true));
             }
 
         )
         .catch(
-            error => dispatch(showAlert('Error trying to get records'))
+            error => dispatch(showAlert('Error trying to get records', true))
         );
 
 

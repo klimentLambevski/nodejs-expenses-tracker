@@ -36,7 +36,7 @@ export const saveSelfAction = (data) =>
         .catch(
             error => {
                 error.data.map((err) => {
-                    dispatch(showAlert(err))
+                    dispatch(showAlert(err, true))
                 });
             }
         );

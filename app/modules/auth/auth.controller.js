@@ -25,7 +25,7 @@ const methods = {
                     message: 'Username or password are not valid'
                 }]);
             }
-            if(!user.activated) {
+            else if(!user.activated) {
                 res.status(401).json([{
                     message: 'Account has not been activated'
                 }]);

@@ -6,7 +6,26 @@ import {FlatButton} from "material-ui";
 import {registerUserAction} from "../store/auth/auth.actions";
 import {showAlert} from "../store/alert/alert.actions";
 import {push} from 'react-router-redux';
+import {validateEmail, validateRequired} from "../utils/validate";
 
+const validate = values => {
+    let errors = {};
+
+    validateRequired(values, 'email', errors);
+    validateEmail(values, 'email', errors);
+    validateRequired(values, 'name', errors);
+    validateRequired(values, 'lastName', errors);
+    validateRequired(values, 'password', errors);
+    validateRequired(values, 'password_repeat', errors);
+
+    if(values.password !== values.password_repeat) {
+        errors.password_repeat = 'Password and repeat password should be same'
+    }
+
+    return errors;
+};
+
+const UserRegisterFormRedux = withFormHandler(UserRegisterForm, 'register', validate);
 class RegisterView extends React.Component {
     constructor(props) {
         super(props);
@@ -17,7 +36,7 @@ class RegisterView extends React.Component {
     }
 
     registerUser = (data) => {
-        this.props.registerUserAction(data).then(res => {
+        return this.props.registerUserAction(data).then(res => {
             this.setState({
                 success: true
             });
@@ -29,13 +48,14 @@ class RegisterView extends React.Component {
     };
 
     render() {
-        const UserRegisterFormRedux = withFormHandler(UserRegisterForm, 'register');
 
         return (
             <div className="login">
                 {
                     this.state.success? (
-                        <h4>You are successfully registered. Please check your email and activate your account. Redirecting ...</h4>
+                        <div className="form-container">
+                            <h4>You are successfully registered. Please check your email and activate your account. Redirecting ...</h4>
+                        </div>
                     ): (
                         <div>
                             <UserRegisterFormRedux

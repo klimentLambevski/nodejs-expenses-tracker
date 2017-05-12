@@ -3,9 +3,10 @@ import {connect} from "react-redux";
 import {deleteSelfRecordAction, getSelfRecordsAction, getUserRecordsAction} from "../../store/record/record.actions";
 import {
     DatePicker, MenuItem, RaisedButton, SelectField, Table, TableBody, TableHeader, TableHeaderColumn, TableRow,
-    TableRowColumn
+    TableRowColumn, TextField
 } from "material-ui";
 import * as _ from "lodash";
+import {getUsersAction} from "../../store/users/users.actions";
 
 class RecordsManage extends React.Component {
     constructor(props) {
@@ -27,12 +28,16 @@ class RecordsManage extends React.Component {
 
         if(this.props.self.role !== 'admin') {
             this.props.getSelfRecordsAction(date, dateTo);
+
+        } else {
+            this.props.getUsersAction();
         }
 
 
     }
 
-    updateRecords(dateFrom, dateTo) {
+    updateRecords(dateFrom, dateTo, search) {
+        console.log(search);
         let dateToModified = _.clone(dateTo);
         if(dateFrom >= dateTo) {
             dateToModified = _.clone(dateFrom);
@@ -47,7 +52,8 @@ class RecordsManage extends React.Component {
 
         this.setState({
             dateFrom: dateFrom,
-            dateTo: dateToModified
+            dateTo: dateToModified,
+            search
         })
     }
 
@@ -101,12 +107,20 @@ class RecordsManage extends React.Component {
                             </SelectField>
                         )
                     }
+                    <TextField
+                        floatingLabelText="Search"
+                        value={this.state.search}
+                        onChange={(e, text) => {
+                            this.updateRecords(this.state.dateFrom, this.state.dateTo, text);
+                        } }
+                    />
+
                     <DatePicker
                         floatingLabelText="Date from"
                         mode="landscape"
                         value={this.state.dateFrom}
                         onChange={(e, date) => {
-                            this.updateRecords(date, this.state.dateTo)
+                            this.updateRecords(date, this.state.dateTo, this.state.search)
                         } }/>
 
                     <DatePicker
@@ -114,7 +128,7 @@ class RecordsManage extends React.Component {
                         mode="landscape"
                         value={this.state.dateTo}
                         onChange={(e, date) => {
-                            this.updateRecords(this.state.dateFrom, date)
+                            this.updateRecords(this.state.dateFrom, date, this.state.search)
                         } }/>
                     {
                         (this.props.self.role !== 'admin' || this.state.selectedUser) && (
@@ -185,7 +199,8 @@ RecordsManage = connect(state => ({
 }), {
     getSelfRecordsAction,
     deleteSelfRecordAction,
-    getUserRecordsAction
+    getUserRecordsAction,
+    getUsersAction
 })(RecordsManage);
 
 export {

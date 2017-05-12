@@ -6,11 +6,12 @@ export const actions = createActionMap({
     REMOVE_ALERT: ''
 }, 'alert');
 
-export const showAlert = (alert) => ({
+export const showAlert = (alert, error) => ({
     type: actions.SHOW_ALERT,
     alert: {
         ...alert,
-        alertId: _.uniqueId("alert-")
+        alertId: _.uniqueId("alert-"),
+        error
     }
 });
 

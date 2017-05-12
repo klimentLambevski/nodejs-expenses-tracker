@@ -2,6 +2,7 @@ import {connect} from "react-redux";
 import {DatePicker, MenuItem, RaisedButton, SelectField} from "material-ui";
 import * as _ from "lodash";
 import {getSelfRecordsAction, getUserRecordsAction} from "../../store/record/record.actions";
+import {getUsersAction} from "../../store/users/users.actions";
 
 Date.prototype.getWeekNumber = function(){
     let d = new Date(+this);
@@ -19,6 +20,9 @@ class ExpensesReport extends React.Component {
             dateTo: null,
             selectedUser: null
         };
+        if(this.props.self.role === 'admin') {
+            this.props.getUsersAction()
+        }
     }
 
     shouldDisableDate(day) {
@@ -177,6 +181,7 @@ class ExpensesReport extends React.Component {
                 {
                     this.state.dateFrom && this.state.dateTo && (this.state.selectedUser || this.props.self.role !== 'admin') && (
                         <div className="expenses-report-preview form-container">
+                            <h4>{this.state.selectedUser ? `${this.state.selectedUser.name} ${this.state.selectedUser.lastName}` : `${this.props.self.name} ${this.props.self.lastName}`}</h4>
                             <h4>
                                 Expense report for week starting on {this.state.dateFrom.getDate()}/{this.state.dateFrom.getMonth()}/{this.state.dateFrom.getFullYear()} ending on {this.state.dateTo.getDate()}/{this.state.dateTo.getMonth()}/{this.state.dateTo.getFullYear()}
                             </h4>
@@ -240,7 +245,8 @@ ExpensesReport = connect(state => ({
     users: state.common.users,
 }), {
     getSelfRecordsAction,
-    getUserRecordsAction
+    getUserRecordsAction,
+    getUsersAction
 })(ExpensesReport);
 
 export {
