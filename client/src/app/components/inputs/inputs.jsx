@@ -54,18 +54,19 @@ export const renderDatePicker = ({ input, meta: { touched, error }, label, ...cu
   />
 );
 
-export const renderTimePicker = ({ input, meta: { touched, error }, label, ...custom }) => (
-    <TimePicker
-        {...input}
-        errorText={touched && error}
-        onChange={(e, val) => input.onChange(val)}
-        fullWidth={true}
-        floatingLabelText={label}
-        format="24hr"
-        {...custom}
-        value={input.value ? new Date(input.value) : null}
-    />
-);
+export const renderTimePicker = ({ input, meta: { touched, error }, label, ...custom }) => {
+    return (
+        <TimePicker
+            errorText={touched && error}
+            onChange={(e, val) => input.onChange(val)}
+            fullWidth={true}
+            floatingLabelText={label}
+            format="24hr"
+            {...custom}
+            value={input.value ? input.value: null}
+        />
+    );
+}
 
 export const renderInputList = ({ fields, nestedField, fieldLabel, label, type, meta: { touched, error }, ...custom }) => (
   <div className="input-list">

@@ -7,6 +7,10 @@ const Record = sequelize.define('record', {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
     },
+    name: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
     date: {
         type: DataTypes.DATE,
         allowNull: false

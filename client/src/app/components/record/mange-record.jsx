@@ -7,15 +7,21 @@ import {
 } from "../../store/record/record.actions";
 import {connect} from "react-redux";
 import {validateFloat, validateRequired} from "../../utils/validate";
+import * as _ from "lodash";
 
 const validate = values => {
     let errors = {};
 
+    validateRequired(values, 'name', errors);
     validateRequired(values, 'date', errors);
     validateRequired(values, 'time', errors);
     validateRequired(values, 'description', errors);
     validateRequired(values, 'amount', errors);
     validateFloat(values, 'amount', errors);
+
+    if(_.isNumber(parseFloat(values.amount)) && parseFloat(values.amount) <= 0) {
+        errors.amount = 'Amount must be positive number';
+    }
 
     return errors;
 };

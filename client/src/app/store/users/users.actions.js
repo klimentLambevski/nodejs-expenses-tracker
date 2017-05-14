@@ -102,7 +102,14 @@ export const inviteMemberAction = (email) =>
             dispatch(showAlert(res[0]));
             return res;
         })
-        .catch(err => console.log('invite member err -->', err));
+        .catch(err => {
+            err.data.map((e) => {
+                dispatch(showAlert(e, true))
+            });
+
+            console.log('invite member err -->', err)
+            return Promise.reject(err);
+        });
 
 export const completeInvitationAction = (user) =>
     (dispatch) => completeInvitation(user)

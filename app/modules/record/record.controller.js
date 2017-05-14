@@ -4,6 +4,7 @@ const sequelize = require('sequelize');
 
 const recordValidation = {
     store: Joi.object().keys({
+        name: Joi.string().required(),
         date: Joi.date().iso().required(),
         description: Joi.string().required(),
         amount: Joi.number().positive().required(),
@@ -19,12 +20,22 @@ const recordMethods = {
         if (req.query.dateTo) {
             dateTo = new Date(req.query.dateTo);
         }
-        req.user.getRecords({
-            where: {
-                date: {
-                    $between: [dateFrom, dateTo]
-                }
+
+        let where = {
+            date: {
+                $between: [dateFrom, dateTo]
             }
+        };
+
+        if(req.query.search) {
+            where = Object.assign(where, {
+                name: {
+                    $like: `%${req.query.search}%`
+                }
+            })
+        }
+        req.user.getRecords({
+            where
         }).then(records => res.json(records));
     },
     getForUser(req, res) {
@@ -35,14 +46,24 @@ const recordMethods = {
             dateTo = new Date(req.query.dateTo);
         }
 
+        let where = {
+            date: {
+                $between: [dateFrom, dateTo]
+            }
+        };
+
+        if(req.query.search) {
+            where = Object.assign(where, {
+                name: {
+                    $like: `%${req.query.search}%`
+                }
+            })
+        }
+
         User.findById(req.params.id).then(user => {
             if (user) {
                 user.getRecords({
-                    where: {
-                        date: {
-                            $between: [dateFrom, dateTo]
-                        }
-                    }
+                    where
                 }).then(records => res.json(records));
             } else {
                 res.sendStatus(401);

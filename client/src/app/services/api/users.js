@@ -22,8 +22,8 @@ export const deleteUser = ({id}) => {
     return deleteMethod(resources.USERS, id);
 };
 
-export const getUserRecords = (user, date, dateTo) => {
-    return get(`${resources.USERS}/${user.id}${resources.RECORDS}`, {date: date.toISOString(), dateTo: dateTo && dateTo.toISOString()})
+export const getUserRecords = (user, date, dateTo, search) => {
+    return get(`${resources.USERS}/${user.id}${resources.RECORDS}`, {date: date.toISOString(), dateTo: dateTo && dateTo.toISOString(), search})
 };
 
 export const deleteRecord = (user, record) => {

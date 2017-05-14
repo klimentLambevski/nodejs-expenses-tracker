@@ -3,6 +3,7 @@ import {Field, reduxForm} from "redux-form";
 import {renderTextField} from "../inputs/inputs";
 import {RaisedButton} from "material-ui";
 import {inviteMemberAction} from "../../store/users/users.actions";
+import {validateEmail, validateRequired} from "../../utils/validate";
 
 let InvitationForm = ({handleSubmit, pristine, submitting, invalid}) => (
     <form onSubmit={handleSubmit} autoComplete="off">
@@ -18,9 +19,20 @@ let InvitationForm = ({handleSubmit, pristine, submitting, invalid}) => (
     </form>
 );
 
+
+const validate = values => {
+    let errors = {};
+
+    validateRequired(values, 'email', errors);
+    validateEmail(values, 'email', errors);
+
+    return errors;
+};
+
 InvitationForm = reduxForm({
     form: 'invitation',
-    enableReinitialize: true
+    enableReinitialize: true,
+    validate
 })(InvitationForm);
 
 class InvitationView extends React.Component {
@@ -34,7 +46,7 @@ class InvitationView extends React.Component {
     sendInvitation = (data) => {
         this.props.inviteMemberAction(data.email).then(res => {
             this.setState({
-                form: {}
+                form: {email: null}
             })
         })
     };

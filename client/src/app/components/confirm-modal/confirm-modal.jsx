@@ -1,4 +1,5 @@
 import {Dialog, FlatButton} from "material-ui";
+import React from "react";
 class ConfirmModal extends React.Component {
 
     constructor(props) {

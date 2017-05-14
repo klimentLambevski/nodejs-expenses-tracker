@@ -5,6 +5,17 @@ import {logoutSelf, saveSelfAction} from "../../store/self/self.actions";
 import {logoutUser} from "../../store/auth/auth.actions";
 import {withFormHandler} from "../../hocs/with-form-handler";
 import UserRegisterForm from '../user/user.register.form';
+import {validateRequired} from "../../utils/validate";
+
+const validate = values => {
+    let errors = {};
+
+    validateRequired(values, 'name', errors);
+    validateRequired(values, 'lastName', errors);
+
+    return errors;
+};
+const UserRegisterFormRedux = withFormHandler(UserRegisterForm, 'create', validate);
 
 class Header extends React.Component {
     constructor(props) {
@@ -51,7 +62,7 @@ class Header extends React.Component {
             />,
         ];
 
-        const UserRegisterFormRedux = withFormHandler(UserRegisterForm, 'create');
+
 
         const children = [
             <UserRegisterFormRedux

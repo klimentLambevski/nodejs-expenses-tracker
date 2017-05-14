@@ -29,27 +29,31 @@ const deleteRecordSuccess = (record) => ({
     record
 });
 
-export const getSelfRecordsAction = (date, dateTo) =>
-    (dispatch) => getSelfRecords(date, dateTo)
+export const getSelfRecordsAction = (date, dateTo, search) =>
+    (dispatch) => getSelfRecords(date, dateTo, search)
         .then(response =>
             dispatch(getSelfRecordsSuccess(response.map(({date, ...rest}) => ({date: new Date(date), time: new Date(date), ...rest}))))
         )
         .catch(
             error => {
                 console.log(error);
-                dispatch(showAlert('Error trying to get records', true))
+                dispatch(showAlert('Error trying to get records', true));
+                return Promise.reject(error);
             }
         );
 
-export const getUserRecordsAction = (user, date, dateTo) =>
-    (dispatch) => getUserRecords(user, date, dateTo)
+export const getUserRecordsAction = (user, date, dateTo, search) =>
+    (dispatch) => getUserRecords(user, date, dateTo, search)
         .then(
             response => {
                 dispatch(getSelfRecordsSuccess(response.map(({date, ...rest}) => ({date: new Date(date), time: new Date(date), ...rest}))));
             }
         )
         .catch(
-            error => dispatch(showAlert({message: 'Error trying to get records'}, true))
+            error => {
+                dispatch(showAlert({message: 'Error trying to get records'}, true));
+                return Promise.reject(error);
+            }
         );
 
 export const addSelfRecordAction = (record) =>
@@ -67,7 +71,8 @@ export const addSelfRecordAction = (record) =>
         )
         .catch(
             error => {
-                error.data.map(err => dispatch(showAlert({message: err.message}, true)))
+                error.data.map(err => dispatch(showAlert({message: err.message}, true)));
+                return Promise.reject(error);
             }
         );
 
@@ -87,7 +92,8 @@ export const addUserRecordAction = (user, record) =>
         )
         .catch(
             error => {
-                error.data.map(err => dispatch(showAlert({message: err.message}, true)))
+                error.data.map(err => dispatch(showAlert({message: err.message}, true)));
+                return Promise.reject(error);
             }
         );
 
@@ -102,19 +108,25 @@ export const updateSelfRecordAction = (record) =>
                     ...rest
                 }
             })
-        }).catch(err => console.log('update record err -->', err));
+        }).catch(err => {
+            console.log('update record err -->', err);
+            return Promise.reject(error);
+        });
 
 export const deleteRecordAction = (user, record) =>
     (dispatch) => deleteRecord(user, record)
         .then(
             response => {
                 dispatch(deleteRecordSuccess(response));
-                dispatch(showAlert({message: 'Record successfully deleted'}, true));
+                dispatch(showAlert({message: 'Record successfully deleted'}));
             }
 
         )
         .catch(
-            error => dispatch(showAlert('Error trying to get records', true))
+            error => {
+                dispatch(showAlert('Error trying to get records', true));
+                return Promise.reject(error);
+            }
         );
 
 export const deleteSelfRecordAction = (record) =>
@@ -122,7 +134,7 @@ export const deleteSelfRecordAction = (record) =>
         .then(
             response => {
                 dispatch(deleteRecordSuccess(response));
-                dispatch(showAlert({message: 'Record successfully deleted'}, true));
+                dispatch(showAlert({message: 'Record successfully deleted'}));
             }
 
         )

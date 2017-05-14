@@ -20,11 +20,17 @@ const validate = values => {
     validateEmail(values, 'email', errors);
     validateRequired(values, 'name', errors);
     validateRequired(values, 'lastName', errors);
+    if(!values.id) {
+        validateRequired(values, 'password', errors);
+        validateRequired(values, 'password_repeat', errors);
 
+        if(values.password !== values.password_repeat) {
+            errors.password_repeat = 'Password and repeat password should be same'
+        }
+    }
 
     return errors;
 };
-
 
 const UserRegisterFormRedux = withFormHandler(UserRegisterForm, 'create', validate);
 

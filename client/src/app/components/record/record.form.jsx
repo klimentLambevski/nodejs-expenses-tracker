@@ -7,6 +7,14 @@ const RecordForm = ({handleSubmit, pristine, submitting, invalid, initialValues,
         <form onSubmit={handleSubmit} noValidate autoComplete="off">
             <div>
                 <Field
+                    component={renderTextField}
+                    type="text"
+                    name="name"
+                    label="Name *"
+                />
+            </div>
+            <div>
+                <Field
                     component={renderDatePicker}
                     name="date"
                     label="Date *"
@@ -41,7 +49,7 @@ const RecordForm = ({handleSubmit, pristine, submitting, invalid, initialValues,
                     component={renderTextField}
                     type="text"
                     name="comment"
-                    label="Comment *"
+                    label="Comment"
                 />
             </div>
             <div>

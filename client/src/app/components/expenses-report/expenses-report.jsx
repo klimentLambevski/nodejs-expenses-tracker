@@ -21,7 +21,7 @@ class ExpensesReport extends React.Component {
             selectedUser: null
         };
         if(this.props.self.role === 'admin') {
-            this.props.getUsersAction()
+            this.props.getUsersAction(['regular'])
         }
     }
 

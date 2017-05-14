@@ -200,16 +200,27 @@ const usersMethods = {
     },
 
     invite(req, res) {
-        User.create({
-            email: req.body.email,
-            password: 'none',
-            name: 'none',
-            lastName: 'none',
-            role: 'regular'
-        }).then(user => {
-            sendInvitationMail(user, req.headers.origin);
-            res.json([{message: 'Invitation successfully sent to user'}]);
-        });
+        User.findOne({
+            where: {
+                email: req.body.email,
+            }
+        }).then(u => {
+            if(!u) {
+                User.create({
+                    email: req.body.email,
+                    password: 'none',
+                    name: 'none',
+                    lastName: 'none',
+                    role: 'regular'
+                }).then(user => {
+                    sendInvitationMail(user, req.headers.origin);
+                    res.json([{message: 'Invitation successfully sent to user'}]);
+                });
+            } else {
+                res.status(422).json([{message: 'Email you want to sent invitation to is already in the database'}]);
+            }
+        })
+
     }
 };
 

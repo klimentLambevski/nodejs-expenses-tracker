@@ -7,6 +7,7 @@ import {
 } from "material-ui";
 import * as _ from "lodash";
 import {getUsersAction} from "../../store/users/users.actions";
+import {ConfirmModal} from "../confirm-modal/confirm-modal";
 
 class RecordsManage extends React.Component {
     constructor(props) {
@@ -23,21 +24,23 @@ class RecordsManage extends React.Component {
         this.state = {
             selectedUser: null,
             dateFrom: date,
-            dateTo: dateTo
+            dateTo: dateTo,
+            rowForDelete: null,
+            confirmDeleteOpen: false
         };
 
         if(this.props.self.role !== 'admin') {
             this.props.getSelfRecordsAction(date, dateTo);
 
         } else {
-            this.props.getUsersAction();
+            this.props.getUsersAction(['regular']);
         }
 
 
     }
 
     updateRecords(dateFrom, dateTo, search) {
-        console.log(search);
+
         let dateToModified = _.clone(dateTo);
         if(dateFrom >= dateTo) {
             dateToModified = _.clone(dateFrom);
@@ -45,9 +48,9 @@ class RecordsManage extends React.Component {
         }
 
         if(this.props.self.role !== 'admin') {
-            this.props.getSelfRecordsAction(dateFrom, dateTo);
+            this.props.getSelfRecordsAction(dateFrom, dateTo, search);
         } else {
-            this.props.getUserRecordsAction(this.state.selectedUser, dateFrom, dateToModified);
+            this.props.getUserRecordsAction(this.state.selectedUser, dateFrom, dateToModified, search);
         }
 
         this.setState({
@@ -85,6 +88,21 @@ class RecordsManage extends React.Component {
         } else {
             this.props.getUserRecordsAction(this.state.selectedUser, this.state.dateFrom, this.state.dateTo);
         }
+    };
+
+    openConfirmDelete(row) {
+        this.setState({
+            rowForDelete: row,
+            confirmDeleteOpen: true
+        })
+    }
+
+    onConfirmDeleteSuccess = () => {
+        this.props.deleteSelfRecordAction(this.state.rowForDelete);
+        this.setState({
+            rowForDelete: null,
+            confirmDeleteOpen: false
+        })
     };
 
     render() {
@@ -151,6 +169,7 @@ class RecordsManage extends React.Component {
                                 >
                                     <TableRow>
                                         <TableHeaderColumn>#</TableHeaderColumn>
+                                        <TableHeaderColumn tooltip="Name of the record">Name</TableHeaderColumn>
                                         <TableHeaderColumn tooltip="Date of the record">Date</TableHeaderColumn>
                                         <TableHeaderColumn tooltip="Description od the record">Description</TableHeaderColumn>
                                         <TableHeaderColumn tooltip="The Last name">Amount</TableHeaderColumn>
@@ -168,6 +187,7 @@ class RecordsManage extends React.Component {
                                     {this.props.records.map((row, index) => (
                                         <TableRow key={index} selected={row.selected}>
                                             <TableRowColumn>{index}</TableRowColumn>
+                                            <TableRowColumn>{row.name}</TableRowColumn>
                                             <TableRowColumn>{this.formatDate(row.date)}</TableRowColumn>
                                             <TableRowColumn>{row.description}</TableRowColumn>
                                             <TableRowColumn>{row.amount}</TableRowColumn>
@@ -177,7 +197,7 @@ class RecordsManage extends React.Component {
                                             </TableRowColumn>
                                             <TableRowColumn>
                                                 <RaisedButton label="Delete" secondary={true} onTouchTap={() => {
-                                                    this.deleteRecord(row)
+                                                    this.openConfirmDelete(row)
                                                 }}/>
                                             </TableRowColumn>
                                         </TableRow>
@@ -187,6 +207,10 @@ class RecordsManage extends React.Component {
                         </div>
                     )
                 }
+                <ConfirmModal
+                    message={'Are you sure you want to delete this record?'}
+                    modalOpen={this.state.confirmDeleteOpen}
+                    onSuccess={this.onConfirmDeleteSuccess}/>
             </div>
         )
     }
