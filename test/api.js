@@ -11,7 +11,8 @@ beforeEach((done) => {
             name: 'test',
             lastName: 'test',
             password: 'test',
-            role: 'admin'
+            role: 'admin',
+            activated: true
         });
     }).then(() => {
         return User.create({
@@ -19,7 +20,8 @@ beforeEach((done) => {
             name: 'test',
             lastName: 'test',
             password: 'test',
-            role: 'manager'
+            role: 'manager',
+            activated: true
         });
     }).then(() => {
         return User.create({
@@ -27,7 +29,8 @@ beforeEach((done) => {
             name: 'test',
             lastName: 'test',
             password: 'test',
-            role: 'regular'
+            role: 'regular',
+            activated: true
         });
     }).then(() => {
         done();
@@ -39,20 +42,27 @@ function login() {
         .post('/api/auth/login')
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
-        .send({ email: 'admin@test.com', password: 'test' });
+        .send({
+            email: 'admin@test.com',
+            password: 'test',
+            _testToken: 'A57AA433B3A5895E87CACE6F993C6BC3FA5FC612EE2BC122E312A53145309FE3313AE81EF9A76F93093D88B3A9023DC610CC13B1C15B926B1E77EE2B7A7FB8DE',
+            captcha: 'test'
+        });
 }
 
 function addRecord(token) {
-    let workedTo = new Date();
-    workedTo.setHours(workedTo.getHours() + 1);
+
     return request(server)
         .post('/api/self/records')
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .set('Authorization', `JWT ${token}`)
         .send({
-            workedFrom: new Date(),
-            workedTo: workedTo
+            date: new Date(),
+            name: 'test record',
+            description: 'test description',
+            amount: 1,
+            comment: 'no comment'
         });
 }
 
@@ -66,9 +76,10 @@ describe('/api', () => {
                     assert(res.body.token);
                     done();
                 }, (err) => {
+                console.log(err);
                     assert(false);
                     done(err);
-                });
+                }).catch(err => done(err));
         });
     });
 

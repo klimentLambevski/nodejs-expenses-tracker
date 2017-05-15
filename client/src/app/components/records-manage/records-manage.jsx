@@ -2,7 +2,8 @@ import {ManageRecord} from "../record/mange-record";
 import {connect} from "react-redux";
 import {deleteSelfRecordAction, getSelfRecordsAction, getUserRecordsAction} from "../../store/record/record.actions";
 import {
-    DatePicker, MenuItem, RaisedButton, SelectField, Table, TableBody, TableHeader, TableHeaderColumn, TableRow,
+    DatePicker, FlatButton, MenuItem, RaisedButton, SelectField, Table, TableBody, TableHeader, TableHeaderColumn,
+    TableRow,
     TableRowColumn, TextField
 } from "material-ui";
 import * as _ from "lodash";
@@ -23,14 +24,14 @@ class RecordsManage extends React.Component {
 
         this.state = {
             selectedUser: null,
-            dateFrom: date,
-            dateTo: dateTo,
+            dateFrom: null,
+            dateTo: null,
             rowForDelete: null,
             confirmDeleteOpen: false
         };
 
         if(this.props.self.role !== 'admin') {
-            this.props.getSelfRecordsAction(date, dateTo);
+            // this.props.getSelfRecordsAction();
 
         } else {
             this.props.getUsersAction(['regular']);
@@ -42,15 +43,19 @@ class RecordsManage extends React.Component {
     updateRecords(dateFrom, dateTo, search) {
 
         let dateToModified = _.clone(dateTo);
-        if(dateFrom >= dateTo) {
-            dateToModified = _.clone(dateFrom);
-            dateToModified.setDate(dateFrom.getDate() + 1);
+        if(dateFrom) {
+            if(dateFrom >= dateTo) {
+                dateToModified = _.clone(dateFrom);
+                dateToModified.setDate(dateFrom.getDate() + 1);
+            }
         }
 
-        if(this.props.self.role !== 'admin') {
-            this.props.getSelfRecordsAction(dateFrom, dateTo, search);
-        } else {
-            this.props.getUserRecordsAction(this.state.selectedUser, dateFrom, dateToModified, search);
+        if(dateFrom || search) {
+            if(this.props.self.role !== 'admin') {
+                this.props.getSelfRecordsAction(dateFrom, dateTo, search);
+            } else {
+                this.props.getUserRecordsAction(this.state.selectedUser, dateFrom, dateToModified, search);
+            }
         }
 
         this.setState({
@@ -105,6 +110,17 @@ class RecordsManage extends React.Component {
         })
     };
 
+    clearDates = () => {
+        this.setState({
+            dateFrom: null,
+            dateTo: null,
+        });
+
+        if(this.props.self.role !== 'admin') {
+            this.state.search && this.props.getSelfRecordsAction();
+        }
+    };
+
     render() {
 
         return (
@@ -148,6 +164,7 @@ class RecordsManage extends React.Component {
                         onChange={(e, date) => {
                             this.updateRecords(this.state.dateFrom, date, this.state.search)
                         } }/>
+                    <FlatButton secondary={true} label="Clear dates" onTouchTap={this.clearDates}/>
                     {
                         (this.props.self.role !== 'admin' || this.state.selectedUser) && (
                             <ManageRecord user={this.state.selectedUser} onChange={this.recordAdded}/>
@@ -155,7 +172,7 @@ class RecordsManage extends React.Component {
                     }
                 </div>
                 {
-                    (this.props.self.role !== 'admin' || this.state.selectedUser) && (
+                    ((this.props.self.role !== 'admin' || this.state.selectedUser) && (this.state.search || this.state.dateFrom)) && (
                         <div className="records-manage-preview form-container">
                             <Table
                                 height={'400px'}

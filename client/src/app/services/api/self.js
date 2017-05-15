@@ -13,7 +13,7 @@ export const updateSelf = ({name, lastName}) => {
 };
 
 export const getSelfRecords = (date, dateTo, search) => {
-    return get(resources.SELF.RECORDS, {date: date.toISOString(), dateTo: dateTo.toISOString(), search});
+    return get(resources.SELF.RECORDS, {date: date && date.toISOString(), dateTo: dateTo && dateTo.toISOString(), search});
 };
 
 export const addSelfRecords = ({name, date, time, description, amount, comment}) => {

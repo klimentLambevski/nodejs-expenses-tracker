@@ -8,11 +8,13 @@ beforeEach(() => {
 describe('Record', () => {
     describe('Create record', () => {
         it('should create record', (done) => {
-            let workedTo = new Date();
-            workedTo.setHours(workedTo.getHours() + 1);
+
             Record.create({
-                workedFrom: new Date(),
-                workedTo: workedTo
+                date: new Date(),
+                name: 'test record',
+                description: 'test description',
+                amount: 1,
+                comment: 'no comment'
             }).then(record => {
                 assert(record);
                 record.destroy().then(() => {

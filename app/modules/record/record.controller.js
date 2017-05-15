@@ -21,11 +21,16 @@ const recordMethods = {
             dateTo = new Date(req.query.dateTo);
         }
 
-        let where = {
-            date: {
-                $between: [dateFrom, dateTo]
-            }
-        };
+        let where = {};
+
+        if(req.query.date) {
+            where = Object.assign(where, {
+                date: {
+                    $between: [dateFrom, dateTo]
+                }
+            });
+        }
+
 
         if(req.query.search) {
             where = Object.assign(where, {
@@ -46,11 +51,16 @@ const recordMethods = {
             dateTo = new Date(req.query.dateTo);
         }
 
-        let where = {
-            date: {
-                $between: [dateFrom, dateTo]
-            }
-        };
+        let where = {};
+
+        if(req.query.date) {
+            where = Object.assign(where, {
+                date: {
+                    $between: [dateFrom, dateTo]
+                }
+            });
+        }
+
 
         if(req.query.search) {
             where = Object.assign(where, {

@@ -122,6 +122,7 @@ class UsersManage extends React.Component {
                                 <TableHeaderColumn tooltip="The Name">Name</TableHeaderColumn>
                                 <TableHeaderColumn tooltip="The Last name">Last name</TableHeaderColumn>
                                 <TableHeaderColumn tooltip="Role">Role</TableHeaderColumn>
+                                <TableHeaderColumn tooltip="Role">Activated</TableHeaderColumn>
                                 <TableHeaderColumn tooltip="Edit user">Edit</TableHeaderColumn>
                                 <TableHeaderColumn tooltip="Delete">Delete</TableHeaderColumn>
                                 <TableHeaderColumn tooltip="Is user blocked">User blocked</TableHeaderColumn>
@@ -140,6 +141,7 @@ class UsersManage extends React.Component {
                                     <TableRowColumn>{row.name}</TableRowColumn>
                                     <TableRowColumn>{row.lastName}</TableRowColumn>
                                     <TableRowColumn>{row.role}</TableRowColumn>
+                                    <TableRowColumn>{row.activated? 'Active': 'Not active'}</TableRowColumn>
                                     <TableRowColumn>
                                         <RaisedButton label="Edit" primary={true} onTouchTap={() => {
                                             this.openModal(row)
